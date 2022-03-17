@@ -103,18 +103,14 @@ struct ContentView: View {
                 }.map { ($0.1, $0.2, $0.3) }
             }
             
-            var alert = false
+            var count: Int = 0
             for page in pages {
-                if page.2 == true && !page.1.items.isEmpty {
-                    alert = true
+                if page.2 == true {
+                    count += page.1.items.count
                 }
             }
             
-            if alert {
-                NotificationCenter.default.post(name: .wassupNewData, object: nil)
-            } else {
-                NotificationCenter.default.post(name: .wassupResetData, object: nil)
-            }
+            NotificationCenter.default.post(name: .wassupNewData, object: nil, userInfo: ["count": count])
             
             self.pages = pages
             self.lastRefreshed = Date.now

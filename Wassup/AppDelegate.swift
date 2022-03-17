@@ -8,10 +8,26 @@
 import Cocoa
 import SwiftUI
 
+struct StatusItemView: View {
+    
+    let count: Int?
+    let imageName: String
+    
+    var body: some View {
+        HStack {
+            Spacer()
+            if let count = count {
+                Text("\(String(count))")
+            }
+            Image(systemName: imageName)
+        }.padding(.horizontal, 5)
+    }
+}
+
 //@main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    
+    private var statusItemHost: NSHostingView<StatusItemView>!
     private var statusItem: NSStatusItem!
     
     var popover = NSPopover()
@@ -41,24 +57,35 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //        statusItem.menu = menu
 //
         if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "seal", accessibilityDescription: "1")
+//            button.image = NSImage(systemSymbolName: "seal", accessibilityDescription: "1")
+            
+            let statusItemView = StatusItemView(count: nil, imageName: "seal")
+            
+            statusItemHost = NSHostingView(rootView: statusItemView)
+            statusItemHost.frame = NSRect(x: 0, y: 0, width: 60, height: 22)
+            statusItemHost.wantsLayer = true
+            
+            button.frame = statusItemHost.frame
+            button.addSubview(statusItemHost)
             button.action = #selector(menuToggle)
+            
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(handleNewData), name: .wassupNewData, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleResetData), name: .wassupResetData, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleAlertCount(_:)), name: .wassupNewData, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(handle), name: .wassupResetData, object: nil)
     }
     
-    @objc func handleNewData() {
+    @objc func handleAlertCount(_ notification: Notification) {
         DispatchQueue.main.async { [unowned self] in
-            self.statusItem.button?.image = NSImage(systemSymbolName: "xmark.seal", accessibilityDescription: "1")
-//            ?.image(withTintColor: NSColor.)
-        }
-    }
-    
-    @objc func handleResetData() {
-        DispatchQueue.main.async { [unowned self] in
-            self.statusItem.button?.image = NSImage(systemSymbolName: "seal", accessibilityDescription: "1")
+            let count = notification.userInfo?["count"] as? Int
+            
+            var imageName = "seal"
+            if let count = count, count > 0 {
+                imageName = "xmark.seal"
+            }
+            
+            let statusItemView = StatusItemView(count: count, imageName: imageName)
+            statusItemHost.rootView = statusItemView
         }
     }
     
