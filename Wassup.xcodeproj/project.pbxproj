@@ -16,6 +16,16 @@
 		2C10299927E2C95D0065D145 /* WassupUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C10299827E2C95D0065D145 /* WassupUITestsLaunchTests.swift */; };
 		2C1029A627E2CA670065D145 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1029A527E2CA670065D145 /* main.swift */; };
 		2C1029A827E2CAB60065D145 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1029A727E2CAB60065D145 /* ContentView.swift */; };
+		2C1029AC27E411A80065D145 /* ShellOut in Frameworks */ = {isa = PBXBuildFile; productRef = 2C1029AB27E411A80065D145 /* ShellOut */; };
+		2C1029AE27E4D0A30065D145 /* WassupRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1029AD27E4D0A30065D145 /* WassupRunner.swift */; };
+		2C1029B027E4D0C90065D145 /* WassupRunnerTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1029AF27E4D0C80065D145 /* WassupRunnerTester.swift */; };
+		2C1029B227E4D5AF0065D145 /* GitHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1029B127E4D5AE0065D145 /* GitHub.swift */; };
+		2C1029B427E4DD4E0065D145 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1029B327E4DD4E0065D145 /* EditView.swift */; };
+		2C1029B627E4DDB20065D145 /* WassupExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1029B527E4DDB20065D145 /* WassupExecutor.swift */; };
+		2C1029B827E4EFA40065D145 /* RunnerTemplate.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2C1029B727E4EFA40065D145 /* RunnerTemplate.txt */; };
+		2C1029BD27EC1B070065D145 /* RunnerPart.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2C1029BC27EC1B070065D145 /* RunnerPart.txt */; };
+		4A6BA99926BB990502710879 /* Pods_WassupTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFA54132EC9677EDE069D092 /* Pods_WassupTests.framework */; };
+		C551F1825CFF3E7D42B2179B /* Pods_Wassup_WassupUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D8B654EA1F6F53B619A1661 /* Pods_Wassup_WassupUITests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +60,16 @@
 		2C1029A527E2CA670065D145 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		2C1029A727E2CAB60065D145 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2C1029A927E2CB890065D145 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		2C1029AD27E4D0A30065D145 /* WassupRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WassupRunner.swift; sourceTree = "<group>"; };
+		2C1029AF27E4D0C80065D145 /* WassupRunnerTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WassupRunnerTester.swift; sourceTree = "<group>"; };
+		2C1029B127E4D5AE0065D145 /* GitHub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHub.swift; sourceTree = "<group>"; };
+		2C1029B327E4DD4E0065D145 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
+		2C1029B527E4DDB20065D145 /* WassupExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WassupExecutor.swift; sourceTree = "<group>"; };
+		2C1029B727E4EFA40065D145 /* RunnerTemplate.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RunnerTemplate.txt; sourceTree = "<group>"; };
+		2C1029BC27EC1B070065D145 /* RunnerPart.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RunnerPart.txt; sourceTree = "<group>"; };
+		5D8B654EA1F6F53B619A1661 /* Pods_Wassup_WassupUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wassup_WassupUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A297A28039FEDABC84C955A0 /* Pods_Wassup.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wassup.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BFA54132EC9677EDE069D092 /* Pods_WassupTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WassupTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C1029AC27E411A80065D145 /* ShellOut in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -64,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A6BA99926BB990502710879 /* Pods_WassupTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C551F1825CFF3E7D42B2179B /* Pods_Wassup_WassupUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +107,7 @@
 				2C10298B27E2C95D0065D145 /* WassupTests */,
 				2C10299527E2C95D0065D145 /* WassupUITests */,
 				2C10297527E2C95C0065D145 /* Products */,
+				F013009202DB1F7EEA85D0D8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -108,6 +132,13 @@
 				2C10297B27E2C95C0065D145 /* Wassup.xcdatamodeld */,
 				2C1029A527E2CA670065D145 /* main.swift */,
 				2C1029A727E2CAB60065D145 /* ContentView.swift */,
+				2C1029B327E4DD4E0065D145 /* EditView.swift */,
+				2C1029B527E4DDB20065D145 /* WassupExecutor.swift */,
+				2C1029AD27E4D0A30065D145 /* WassupRunner.swift */,
+				2C1029AF27E4D0C80065D145 /* WassupRunnerTester.swift */,
+				2C1029B127E4D5AE0065D145 /* GitHub.swift */,
+				2C1029BC27EC1B070065D145 /* RunnerPart.txt */,
+				2C1029B727E4EFA40065D145 /* RunnerTemplate.txt */,
 			);
 			path = Wassup;
 			sourceTree = "<group>";
@@ -129,6 +160,16 @@
 			path = WassupUITests;
 			sourceTree = "<group>";
 		};
+		F013009202DB1F7EEA85D0D8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				A297A28039FEDABC84C955A0 /* Pods_Wassup.framework */,
+				5D8B654EA1F6F53B619A1661 /* Pods_Wassup_WassupUITests.framework */,
+				BFA54132EC9677EDE069D092 /* Pods_WassupTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -136,6 +177,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2C10299C27E2C95D0065D145 /* Build configuration list for PBXNativeTarget "Wassup" */;
 			buildPhases = (
+				2C1029BB27EC1AA10065D145 /* Generate Runner */,
 				2C10297027E2C95C0065D145 /* Sources */,
 				2C10297127E2C95C0065D145 /* Frameworks */,
 				2C10297227E2C95C0065D145 /* Resources */,
@@ -145,6 +187,9 @@
 			dependencies = (
 			);
 			name = Wassup;
+			packageProductDependencies = (
+				2C1029AB27E411A80065D145 /* ShellOut */,
+			);
 			productName = Wassup;
 			productReference = 2C10297427E2C95C0065D145 /* Wassup.app */;
 			productType = "com.apple.product-type.application";
@@ -153,6 +198,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2C10299F27E2C95D0065D145 /* Build configuration list for PBXNativeTarget "WassupTests" */;
 			buildPhases = (
+				53CE0C0828A8FA34B5B0E7CB /* [CP] Check Pods Manifest.lock */,
 				2C10298427E2C95D0065D145 /* Sources */,
 				2C10298527E2C95D0065D145 /* Frameworks */,
 				2C10298627E2C95D0065D145 /* Resources */,
@@ -171,9 +217,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2C1029A227E2C95D0065D145 /* Build configuration list for PBXNativeTarget "WassupUITests" */;
 			buildPhases = (
+				241DC54CEB722381DD9996F4 /* [CP] Check Pods Manifest.lock */,
 				2C10298E27E2C95D0065D145 /* Sources */,
 				2C10298F27E2C95D0065D145 /* Frameworks */,
 				2C10299027E2C95D0065D145 /* Resources */,
+				A5B6D8CC651C6774664B5F39 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -217,6 +265,9 @@
 				Base,
 			);
 			mainGroup = 2C10296B27E2C95C0065D145;
+			packageReferences = (
+				2C1029AA27E411A80065D145 /* XCRemoteSwiftPackageReference "ShellOut" */,
+			);
 			productRefGroup = 2C10297527E2C95C0065D145 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -233,7 +284,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C1029B827E4EFA40065D145 /* RunnerTemplate.txt in Resources */,
 				2C10297F27E2C95D0065D145 /* Assets.xcassets in Resources */,
+				2C1029BD27EC1B070065D145 /* RunnerPart.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -253,13 +306,105 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		241DC54CEB722381DD9996F4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Wassup-WassupUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2C1029BB27EC1AA10065D145 /* Generate Runner */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Wassup/WassupRunner.swift",
+				"$(SRCROOT)/Wassup/GitHub.swift",
+				"$(SRCROOT)/Wassup/RunnerPart.txt",
+			);
+			name = "Generate Runner";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Wassup/RunnerTemplate.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "eval fileOut=\"\\$SCRIPT_OUTPUT_FILE_0\"\ncat /dev/null > \"$fileOut\"\n\n: $((i=0))\nwhile [ $i -lt \"$SCRIPT_INPUT_FILE_COUNT\" ]\ndo\n    eval fileIn=\"\\$SCRIPT_INPUT_FILE_${i}\"\n    cat \"$fileIn\" >> \"$fileOut\"\n    : $((i=i+1))\ndone\n";
+		};
+		53CE0C0828A8FA34B5B0E7CB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-WassupTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A5B6D8CC651C6774664B5F39 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Wassup-WassupUITests/Pods-Wassup-WassupUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Wassup-WassupUITests/Pods-Wassup-WassupUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Wassup-WassupUITests/Pods-Wassup-WassupUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		2C10297027E2C95C0065D145 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C1029AE27E4D0A30065D145 /* WassupRunner.swift in Sources */,
 				2C10297A27E2C95C0065D145 /* ViewController.swift in Sources */,
+				2C1029B227E4D5AF0065D145 /* GitHub.swift in Sources */,
+				2C1029B627E4DDB20065D145 /* WassupExecutor.swift in Sources */,
+				2C1029B027E4D0C90065D145 /* WassupRunnerTester.swift in Sources */,
 				2C1029A827E2CAB60065D145 /* ContentView.swift in Sources */,
+				2C1029B427E4DD4E0065D145 /* EditView.swift in Sources */,
 				2C10297D27E2C95C0065D145 /* Wassup.xcdatamodeld in Sources */,
 				2C1029A627E2CA670065D145 /* main.swift in Sources */,
 				2C10297827E2C95C0065D145 /* AppDelegate.swift in Sources */,
@@ -582,6 +727,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2C1029AA27E411A80065D145 /* XCRemoteSwiftPackageReference "ShellOut" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JohnSundell/ShellOut";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2C1029AB27E411A80065D145 /* ShellOut */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2C1029AA27E411A80065D145 /* XCRemoteSwiftPackageReference "ShellOut" */;
+			productName = ShellOut;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		2C10297B27E2C95C0065D145 /* Wassup.xcdatamodeld */ = {

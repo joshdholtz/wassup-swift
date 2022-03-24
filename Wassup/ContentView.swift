@@ -7,45 +7,81 @@
 
 import SwiftUI
 
+import ShellOut
+
 struct ContentView: View {
+    @AppStorage("scriptTextV1")
+    private var scriptText: String = ""
     
-    @State var pages: [(String, GitHub.SearchResponse, Bool)] = []
+    @State var editView = false
+
+    var body: some View {
+        VStack {
+            HStack {
+                Spacer()
+                
+                Button {
+                    self.editView.toggle()
+                } label: {
+                    if !editView {
+                        Label("Edit", systemImage: "pencil.circle.fill")
+                    } else {
+                        Label("Save", systemImage: "square.grid.2x2")
+                    }
+                }
+            }.padding()
+            
+            if !editView {
+                DashboardView(scriptText: $scriptText)
+            } else {
+                EditView(text: $scriptText)
+            }
+        }
+    }
+}
+
+struct DashboardView: View {
     
-    @State var selectedPage = 0
+    @Binding var scriptText: String
+    
+    @State var panes: [Output.Pane] = []
+    
+    @State var selectedPane = 0
     @State var lastRefreshed: Date = Date.now
     
     let timer = Timer.publish(every: 60 * 5, on: .main, in: .common).autoconnect()
     
+    init(scriptText: Binding<String>) {
+        self._scriptText = scriptText
+    }
+    
     var body: some View {
         VStack(alignment: .trailing, spacing: 0) {
-            HStack {
-                Text("Refreshed at ") + Text(lastRefreshed, style: .time)
-                
-                Button {
-                    Task {
-                        self.pages = []
-                        await refresh()
-                    }
-                } label: {
-                    Label("Refresh", systemImage: "arrow.clockwise")
-                }
-            }.padding()
-
-            
             VStack(alignment: .leading) {
-                if !self.pages.isEmpty, let page = self.pages[self.selectedPage] {
-                    PageView(title: page.0, searchResponse: page.1)
+                if !self.panes.isEmpty, let pane = self.panes[self.selectedPane] {
+                    PaneView(pane: pane)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     
                     Divider()
                     
                     HStack {
-                        ForEach((1...self.pages.count), id: \.self) { index in
+                        ForEach((1...self.panes.count), id: \.self) { index in
                             Button {
-                                self.selectedPage = index - 1
+                                self.selectedPane = index - 1
                             } label: {
                                 Text("\(index)")
                             }
+                        }
+                        
+                        Spacer()
+                        
+                        Text("Refreshed at ") + Text(lastRefreshed, style: .time)
+                        Button {
+                            Task {
+                                await refresh()
+                            }
+                        } label: {
+                            Label("Refresh", systemImage: "arrow.clockwise")
                         }
                     }
                     
@@ -72,153 +108,71 @@ struct ContentView: View {
     }
     
     func refresh() async {
-        do {
-            let pagesData = [
-//                ("Wassup", "repo:joshdholtz/wassup-swift+is:issue+is:open", true),
-                ("Reviews Requested", "org:RevenueCat+is:pr+is:open+review-requested:joshdholtz", true),
-                ("iOS PRs", "repo:RevenueCat/purchases-ios+is:pr+is:open", false),
-                ("Android PRs", "repo:RevenueCat/purchases-android+is:pr+is:open", false),
-                ("React Native PRs", "repo:RevenueCat/react-native-purchases+is:pr+is:open", false),
-                ("Flutter PRs", "repo:RevenueCat/purchases-flutter+is:pr+is:open", false),
-                ("Cordova PRs", "repo:RevenueCat/cordova-plugin-purchases+is:pr+is:open", false),
-                ("Unity PRs", "repo:RevenueCat/purchases-unity+is:pr+is:open", false)
-            ]
-            
-            let pages = try await withThrowingTaskGroup(of: (Int, String, GitHub.SearchResponse, Bool).self) { group -> [(String, GitHub.SearchResponse, Bool)] in
-                for (index, page) in pagesData.enumerated() {
-                    group.addTask{
-                        let result = try await search(query: page.1)
-                        return (index, page.0, result, page.2)
-                    }
-                }
-
-                var results = [(Int, String, GitHub.SearchResponse, Bool)]()
-
-                for try await (index, title, result, alert) in group {
-                    results.append((index, title, result, alert))
-                }
-
-                return results.sorted { a, b in
-                    return a.0 < b.0
-                }.map { ($0.1, $0.2, $0.3) }
-            }
-            
-            var count: Int = 0
-            for page in pages {
-                if page.2 == true {
-                    count += page.1.items.count
-                }
-            }
-            
-            NotificationCenter.default.post(name: .wassupNewData, object: nil, userInfo: ["count": count])
-            
-            self.pages = pages
-            self.lastRefreshed = Date.now
-            
-        } catch {
-            print("Error: \(error)")
+        if self.scriptText == "" {
+            return
         }
-    }
-    
-    let githubUsername = "joshdholtz"
-    let githubAccessToken = "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"
-    
-    // org:fastlane+is:pr+is:open
-    // org:RevenueCat+is:pr+is:open+review-requested:joshdholtz
-    func search(query: String) async throws -> GitHub.SearchResponse {
-        let url = URL(string: "https://api.github.com/search/issues?q=\(query)")
-        var request = URLRequest(url: url!)
         
-        let basic = "\(githubUsername):\(githubAccessToken)".toBase64()
-        request.addValue("Basic \(basic)", forHTTPHeaderField: "Authorization")
-        
-        let (data, _) = try await URLSession.shared.data(for: request)
-        
-//        print("Response: \(String(data: data, encoding: .utf8))")
-        
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
-
-        let decodedResponse = try decoder.decode(GitHub.SearchResponse.self, from: data)
-        return decodedResponse
+        do {
+            let exe = Executor()
+            let output = try exe.load(script: scriptText)
+            
+            var counts = [Output.Pane.CountAlert: Int]()
+            for pane in output.panes {
+                let count = counts[pane.alert] ?? 0
+                counts[pane.alert] = count + pane.items.count
+            }
+            
+            NotificationCenter.default.post(name: .wassupNewData, object: nil, userInfo: counts)
+            
+            self.lastRefreshed = Date.now
+            self.panes = output.panes
+        } catch {
+            print("Refresh error: \(error)")
+        }
     }
 }
 
-struct PageView: View {
+struct PaneView: View {
     @Environment(\.openURL) var openURL
     
-    let title: String
-    let searchResponse: GitHub.SearchResponse
+    let pane: Output.Pane
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text(title)
+            Text(pane.name)
                 .font(.title)
             ScrollView {
-                ForEach(searchResponse.items) { item in
+                ForEach(pane.items, id: \.self.title) { item in
                     HStack {
                         VStack(alignment: .leading) {
-                            Text("#\(String(item.number)) - \(item.title)")
+                            Text(item.title)
                                 .font(.title2)
-                            Text("\(item.createdAt.timeAgoDisplay()) by \(item.user.login)")
-                                .font(.title3)
+                            if let subtitle = item.subtitle {
+                                Text(subtitle)
+                                    .font(.title3)
+                            }
                         }
                         Spacer()
-                        Button {
-                            openURL(URL(string: item.htmlUrl)!)
-                        } label: {
-                            Text("Open")
+                        
+                        ForEach(item.actions, id: \.self.name) { action in
+                            Button {
+                                switch action.value {
+                                case .url(let url):
+                                    if let url = URL(string: url) {
+                                        openURL(url)
+                                    }
+                                case .shell(_):
+                                    print("nothing yet")
+                                }
+    //                            openURL(URL(string: item.htmlUrl)!)
+                            } label: {
+                                Text(action.name)
+                            }
                         }
 
                     }
                 }
             }
         }
-    }
-}
-
-struct GitHub {
-    struct SearchResponse: Codable {
-        let totalCount: Int
-        let incompleteResults: Bool
-        let items: [Item]
-        
-        struct Item: Codable, Identifiable {
-            let htmlUrl: String
-            let id: Int
-            let number: Int
-            let title: String
-            let user: User
-            let createdAt: Date
-        }
-    }
-    
-    struct User: Codable {
-        let login: String
-    }
-}
-
-extension String {
-
-    func fromBase64() -> String? {
-        guard let data = Data(base64Encoded: self) else {
-            return nil
-        }
-
-        return String(data: data, encoding: .utf8)
-    }
-
-    func toBase64() -> String {
-        return Data(self.utf8).base64EncodedString()
-    }
-
-}
-
-extension Date {
-    func timeAgoDisplay() -> String {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .full
-        return formatter.localizedString(for: self, relativeTo: Date())
     }
 }

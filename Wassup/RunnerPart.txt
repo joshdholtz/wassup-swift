@@ -1,0 +1,10 @@
+let dashboard = 
+REPLACE_HERE
+
+if CommandLine.argc < 2 {
+    if let output = try? dashboard.toString() {
+        print(output)
+    }
+} else {
+    print("run action")
+}

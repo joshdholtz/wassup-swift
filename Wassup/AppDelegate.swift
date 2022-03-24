@@ -10,15 +10,37 @@ import SwiftUI
 
 struct StatusItemView: View {
     
-    let count: Int?
-    let imageName: String
+    let counts: [Output.Pane.CountAlert: Int]
+    
+    var imageName: String {
+        if (counts[.high] ?? 0) > 0 {
+            return "xmark.seal"
+        } else if (counts[.high] ?? 0) > 0 {
+            return "seal"
+        }
+        
+        return "seal"
+    }
+    
+    var count: Int {
+        return counts[.high] ?? counts[.low] ?? 0
+    }
+    
+    var color: Color? {
+        if (counts[.high] ?? 0) > 0 {
+            return Color.red
+        } else if (counts[.high] ?? 0) > 0 {
+            return Color.yellow
+        }
+        
+        return nil
+    }
     
     var body: some View {
         HStack {
             Spacer()
-            if let count = count {
-                Text("\(String(count))")
-            }
+            Text("\(String(count))")
+                .foregroundColor(color)
             Image(systemName: imageName)
         }.padding(.horizontal, 5)
     }
@@ -40,7 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         popover.delegate = self
         
         let controller = NSHostingController(rootView: contentView)
-        controller.view.frame = NSRect(x: 0, y: 0, width: 600, height: 600)
+        controller.view.frame = NSRect(x: 0, y: 0, width: 800, height: 600)
         popover.contentViewController = controller
         
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -59,7 +81,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let button = statusItem.button {
 //            button.image = NSImage(systemSymbolName: "seal", accessibilityDescription: "1")
             
-            let statusItemView = StatusItemView(count: nil, imageName: "seal")
+            let statusItemView = StatusItemView(counts: [:])
             
             statusItemHost = NSHostingView(rootView: statusItemView)
             statusItemHost.frame = NSRect(x: 0, y: 0, width: 60, height: 22)
@@ -77,14 +99,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @objc func handleAlertCount(_ notification: Notification) {
         DispatchQueue.main.async { [unowned self] in
-            let count = notification.userInfo?["count"] as? Int
-            
-            var imageName = "seal"
-            if let count = count, count > 0 {
-                imageName = "xmark.seal"
-            }
-            
-            let statusItemView = StatusItemView(count: count, imageName: imageName)
+            let counts = notification.userInfo as? [Output.Pane.CountAlert: Int] ?? [:]
+ 
+            let statusItemView = StatusItemView(counts: counts)
             statusItemHost.rootView = statusItemView
         }
     }
