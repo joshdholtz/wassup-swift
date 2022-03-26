@@ -10,9 +10,11 @@ import SwiftUI
 struct EditView: View {
     
     @Binding var text: String
+    var secrets: String
 
-    init(text: Binding<String>) {
+    init(text: Binding<String>, secrets: String) {
         self._text = text
+        self.secrets = secrets
     }
     
     var body: some View {
@@ -23,7 +25,7 @@ struct EditView: View {
             Button {
                 do {
                     let exe = Executor()
-                    let output = try exe.load(script: text)
+                    let output = try exe.load(script: text, secrets: secrets)
                     print("OUTPUT BELOW")
                     print(output)
                 } catch {
@@ -35,7 +37,6 @@ struct EditView: View {
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()
     }
-    
     
 }
 

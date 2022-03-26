@@ -250,8 +250,12 @@ struct GitHubSearch: ContentBuilder {
             
             let encodedQ = newQ.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? newQ
             
+            let githubUsername = ProcessInfo.processInfo.environment["GITHUB_USERNAME"]!
+            let githubApiKey = ProcessInfo.processInfo.environment["GITHUB_API_KEY"]!
+            
             let url = "https://api.github.com/search/issues?q=\(encodedQ)"
-            let (data, _) = try httpRequest(url: url, auth: .basic("joshdholtz", "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"))
+//            let (data, _) = try httpRequest(url: url, auth: .basic("joshdholtz", "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"))
+            let (data, _) = try httpRequest(url: url, auth: .basic(githubUsername, githubApiKey))
             
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase

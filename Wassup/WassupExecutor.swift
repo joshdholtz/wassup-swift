@@ -9,7 +9,12 @@ import Foundation
 import ShellOut
 
 struct Executor {
-    func load(script: String) throws -> Output {
+    func load(script: String, secrets: String) throws -> Output {
+        let secretsCLI = secrets.split(whereSeparator: \.isNewline).map { substring -> String in
+            let thing = String(substring)
+            return thing
+        }.joined(separator: " ")
+        
         let swiftFileURL = try writeTempFile(content: makeRunnableScript(script: script))
         
         let path = swiftFileURL!.absoluteString.replacingOccurrences(of: "file://", with: "")
@@ -23,7 +28,11 @@ struct Executor {
         let _ = try shellOut(to: "(cd \(tempPath) && swiftc \(path))")
         
         let runPath = path.replacingOccurrences(of: ".swift", with: "")
-        let output = try shellOut(to: "(cd \(tempPath) && \(runPath))")
+        
+        let command = "(cd \(tempPath) && \(secretsCLI) \(runPath))"
+        print("Command: \(command)")
+        
+        let output = try shellOut(to: command)
         
 //        print("OUTPUT")
 //        print(output)

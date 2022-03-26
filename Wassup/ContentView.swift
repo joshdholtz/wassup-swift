@@ -13,28 +13,47 @@ struct ContentView: View {
     @AppStorage("scriptTextV1")
     private var scriptText: String = ""
     
+    @AppStorage("secretsTextV1")
+    private var secretsText: String = ""
+    
     @State var editView = false
+    @State var secretsView = false
 
     var body: some View {
         VStack {
             HStack {
                 Spacer()
                 
-                Button {
-                    self.editView.toggle()
-                } label: {
-                    if !editView {
+                if !editView && !secretsView {
+                    Button {
+                        self.editView = true
+                    } label: {
                         Label("Edit", systemImage: "pencil.circle.fill")
-                    } else {
+                    }
+                
+                    Button {
+                        self.secretsView = true
+                    } label: {
+                        Label("Secrets", systemImage: "lock.fill")
+                    }
+                }
+                
+                if editView || secretsView {
+                    Button {
+                        self.editView = false
+                        self.secretsView = false
+                    } label: {
                         Label("Save", systemImage: "square.grid.2x2")
                     }
                 }
             }.padding()
             
-            if !editView {
-                DashboardView(scriptText: $scriptText)
+            if editView {
+                EditView(text: $scriptText, secrets: secretsText)
+            } else if secretsView {
+                SecretsView(text: $secretsText)
             } else {
-                EditView(text: $scriptText)
+                DashboardView(scriptText: $scriptText, secretsText: $secretsText)
             }
         }
     }
@@ -43,6 +62,7 @@ struct ContentView: View {
 struct DashboardView: View {
     
     @Binding var scriptText: String
+    @Binding var secretsText: String
     
     @State var panes: [Output.Pane] = []
     
@@ -51,8 +71,9 @@ struct DashboardView: View {
     
     let timer = Timer.publish(every: 60 * 5, on: .main, in: .common).autoconnect()
     
-    init(scriptText: Binding<String>) {
+    init(scriptText: Binding<String>, secretsText: Binding<String>) {
         self._scriptText = scriptText
+        self._secretsText = secretsText
     }
     
     var body: some View {
@@ -114,7 +135,7 @@ struct DashboardView: View {
         
         do {
             let exe = Executor()
-            let output = try exe.load(script: scriptText)
+            let output = try exe.load(script: scriptText, secrets: secretsText)
             
             var counts = [Output.Pane.CountAlert: Int]()
             for pane in output.panes {
