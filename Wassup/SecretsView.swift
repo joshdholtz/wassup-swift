@@ -7,8 +7,11 @@
 
 import SwiftUI
 
+import CodeEditor
+
 struct SecretsView: View {
     @Binding var text: String
+    @State var fontSize: CGFloat = 14
 
     init(text: Binding<String>) {
         self._text = text
@@ -16,8 +19,11 @@ struct SecretsView: View {
     
     var body: some View {
         VStack(alignment: .trailing, spacing: 0) {
-            TextEditor(text: $text)
-                .font(Font.system(size: 14, weight: .regular, design: .monospaced))
+            CodeEditor(source: self.$text,
+                       language: .swift,
+                       theme: .default,
+                       fontSize: self.$fontSize,
+                       flags: [ .selectable, .editable, .smartIndent])
                 .padding()
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()

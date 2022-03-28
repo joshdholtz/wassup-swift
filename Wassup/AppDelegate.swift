@@ -15,7 +15,9 @@ struct StatusItemView: View {
     var imageName: String {
         if (counts[.high] ?? 0) > 0 {
             return "xmark.seal"
-        } else if (counts[.high] ?? 0) > 0 {
+        } else if (counts[.medium] ?? 0) > 0 {
+            return "seal"
+        } else if (counts[.low] ?? 0) > 0 {
             return "seal"
         }
         
@@ -23,13 +25,23 @@ struct StatusItemView: View {
     }
     
     var count: Int {
-        return counts[.high] ?? counts[.low] ?? 0
+        if (counts[.high] ?? 0) > 0 {
+            return counts[.high] ?? 0
+        } else if (counts[.medium] ?? 0) > 0 {
+            return counts[.medium] ?? 0
+        } else if (counts[.low] ?? 0) > 0 {
+            return counts[.low] ?? 0
+        }
+        
+        return 0
     }
     
     var color: Color? {
         if (counts[.high] ?? 0) > 0 {
             return Color.red
-        } else if (counts[.high] ?? 0) > 0 {
+        } else if (counts[.medium] ?? 0) > 0 {
+            return Color.orange
+        } else if (counts[.low] ?? 0) > 0 {
             return Color.yellow
         }
         

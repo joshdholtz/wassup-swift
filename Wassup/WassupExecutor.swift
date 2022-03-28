@@ -45,7 +45,6 @@ struct Executor {
         return decodedOutput
     }
     
-
     private func makeRunnableScript(script: String) throws -> String {
         if let filepath = Bundle.main.path(forResource: "RunnerTemplate", ofType: "txt") {
             let contents = try String(contentsOfFile: filepath)

@@ -25,6 +25,7 @@
 		2C1029B827E4EFA40065D145 /* RunnerTemplate.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2C1029B727E4EFA40065D145 /* RunnerTemplate.txt */; };
 		2C1029BD27EC1B070065D145 /* RunnerPart.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2C1029BC27EC1B070065D145 /* RunnerPart.txt */; };
 		2C1029BF27EF6ACF0065D145 /* SecretsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1029BE27EF6ACF0065D145 /* SecretsView.swift */; };
+		2C2BFBDE27F1EF880025DBAB /* CodeEditor in Frameworks */ = {isa = PBXBuildFile; productRef = 2C2BFBDD27F1EF880025DBAB /* CodeEditor */; };
 		4A6BA99926BB990502710879 /* Pods_WassupTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFA54132EC9677EDE069D092 /* Pods_WassupTests.framework */; };
 		C551F1825CFF3E7D42B2179B /* Pods_Wassup_WassupUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D8B654EA1F6F53B619A1661 /* Pods_Wassup_WassupUITests.framework */; };
 /* End PBXBuildFile section */
@@ -79,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C2BFBDE27F1EF880025DBAB /* CodeEditor in Frameworks */,
 				2C1029AC27E411A80065D145 /* ShellOut in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -192,6 +194,7 @@
 			name = Wassup;
 			packageProductDependencies = (
 				2C1029AB27E411A80065D145 /* ShellOut */,
+				2C2BFBDD27F1EF880025DBAB /* CodeEditor */,
 			);
 			productName = Wassup;
 			productReference = 2C10297427E2C95C0065D145 /* Wassup.app */;
@@ -270,6 +273,7 @@
 			mainGroup = 2C10296B27E2C95C0065D145;
 			packageReferences = (
 				2C1029AA27E411A80065D145 /* XCRemoteSwiftPackageReference "ShellOut" */,
+				2C2BFBDC27F1EF880025DBAB /* XCRemoteSwiftPackageReference "CodeEditor" */,
 			);
 			productRefGroup = 2C10297527E2C95C0065D145 /* Products */;
 			projectDirPath = "";
@@ -741,6 +745,14 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		2C2BFBDC27F1EF880025DBAB /* XCRemoteSwiftPackageReference "CodeEditor" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ZeeZide/CodeEditor.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -748,6 +760,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2C1029AA27E411A80065D145 /* XCRemoteSwiftPackageReference "ShellOut" */;
 			productName = ShellOut;
+		};
+		2C2BFBDD27F1EF880025DBAB /* CodeEditor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2C2BFBDC27F1EF880025DBAB /* XCRemoteSwiftPackageReference "CodeEditor" */;
+			productName = CodeEditor;
 		};
 /* End XCSwiftPackageProductDependency section */
 
