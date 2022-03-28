@@ -71,6 +71,32 @@ struct DashboardView: View {
     
     let timer = Timer.publish(every: 60 * 5, on: .main, in: .common).autoconnect()
     
+    var maxWidth: Double {
+        var max = 0
+        
+        for pane in self.panes {
+            let v = pane.x + pane.width
+            if v > max {
+                max = v
+            }
+        }
+        
+        return Double(max)
+    }
+    
+    var maxHeight: Double {
+        var max = 0
+        
+        for pane in self.panes {
+            let v = pane.y + pane.height
+            if v > max {
+                max = v
+            }
+        }
+        
+        return Double(max)
+    }
+    
     init(scriptText: Binding<String>, secretsText: Binding<String>) {
         self._scriptText = scriptText
         self._secretsText = secretsText
@@ -79,21 +105,25 @@ struct DashboardView: View {
     var body: some View {
         VStack(alignment: .trailing, spacing: 0) {
             VStack(alignment: .leading) {
-                if !self.panes.isEmpty, let pane = self.panes[self.selectedPane] {
-                    PaneView(pane: pane)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                if !self.panes.isEmpty {
+                    
+                    ZStack {
+                        GeometryReader { proxy in
+                            ForEach(self.panes, id: \.self.name) { pane in
+                                PaneView(pane: pane)
+                                    .padding()
+                                    .frame(width: proxy.size.width * (Double(pane.width) / maxWidth),
+                                           height: proxy.size.height * (Double(pane.height) / maxHeight))
+                                    .offset(x: (proxy.size.width / maxWidth) * CGFloat(pane.x),
+                                            y: (proxy.size.height / maxHeight) * CGFloat(pane.y))
+//                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            }
+                        }
+                    }.frame(maxWidth: .infinity, maxHeight: .infinity)
                     
                     Divider()
                     
-                    HStack {
-                        ForEach((1...self.panes.count), id: \.self) { index in
-                            Button {
-                                self.selectedPane = index - 1
-                            } label: {
-                                Text("\(index)")
-                            }
-                        }
-                        
+                    HStack {                        
                         Spacer()
                         
                         Text("Refreshed at ") + Text(lastRefreshed, style: .time)
