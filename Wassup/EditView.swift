@@ -7,9 +7,12 @@
 
 import SwiftUI
 
+import CodeEditor
+
 struct EditView: View {
     
     @Binding var text: String
+    @State var fontSize: CGFloat = 14
     var secrets: String
 
     init(text: Binding<String>, secrets: String) {
@@ -19,8 +22,11 @@ struct EditView: View {
     
     var body: some View {
         VStack(alignment: .trailing, spacing: 0) {
-            TextEditor(text: $text)
-                .font(Font.system(size: 14, weight: .regular, design: .monospaced))
+            CodeEditor(source: self.$text,
+                       language: .swift,
+                       theme: .default,
+                       fontSize: self.$fontSize,
+                       flags: [ .selectable, .editable, .smartIndent])
                 .padding()
             Button {
                 do {
