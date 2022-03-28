@@ -17,12 +17,15 @@ extension Date {
 
 enum Auth {
     case basic(String, String)
+    case custom(String)
     
     var value: String {
         switch self {
         case let .basic(username, password):
             let base64 = Data("\(username):\(password)".utf8).base64EncodedString()
             return "Basic \(base64)"
+        case let .custom(value):
+            return value
         }
     }
 }
@@ -39,6 +42,7 @@ func httpRequest(url: String, method: String = "GET", headers: [String: String] 
     
     var request = URLRequest(url: URL(string: url)!)
     request.httpMethod = method
+    request.allHTTPHeaderFields = allHeaders
     let semaphore: DispatchSemaphore = DispatchSemaphore(value: 0)
     let task = URLSession.shared.dataTask(with: request) { (theData, theResponse, theError) in
         data = theData
@@ -250,8 +254,10 @@ struct GitHubSearch: ContentBuilder {
             
             let encodedQ = newQ.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? newQ
             
-            let githubUsername = ProcessInfo.processInfo.environment["GITHUB_USERNAME"]!
-            let githubApiKey = ProcessInfo.processInfo.environment["GITHUB_API_KEY"]!
+            let githubUsername = ProcessInfo.processInfo.environment["GITHUB_USERNAME"]!.trimmingCharacters(in: .whitespacesAndNewlines)
+            let githubApiKey = ProcessInfo.processInfo.environment["GITHUB_API_KEY"]!.trimmingCharacters(in: .whitespacesAndNewlines)
+            
+            let auth = Auth.basic(githubUsername, githubApiKey).value
             
             let url = "https://api.github.com/search/issues?q=\(encodedQ)"
 //            let (data, _) = try httpRequest(url: url, auth: .basic("joshdholtz", "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"))
