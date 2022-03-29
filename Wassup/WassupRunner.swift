@@ -262,10 +262,11 @@ struct GitHubSearch: ContentBuilder {
             let githubUsername = ProcessInfo.processInfo.environment["GITHUB_USERNAME"]!.trimmingCharacters(in: .whitespacesAndNewlines)
             let githubApiKey = ProcessInfo.processInfo.environment["GITHUB_API_KEY"]!.trimmingCharacters(in: .whitespacesAndNewlines)
             
-            let auth = Auth.basic(githubUsername, githubApiKey).value
-            
             let url = "https://api.github.com/search/issues?q=\(encodedQ)"
             let (data, _) = try httpRequest(url: url, auth: .basic(githubUsername, githubApiKey))
+            
+//            print("DATA")
+//            print(String(data: data!, encoding: .utf8))
             
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase

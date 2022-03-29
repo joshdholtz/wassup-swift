@@ -8,6 +8,8 @@
 import Cocoa
 import SwiftUI
 
+import KeyboardShortcuts
+
 struct StatusItemView: View {
     
     let counts: [Output.Pane.CountAlert: Int]
@@ -81,7 +83,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let contentView = ContentView()
         
         let controller = NSHostingController(rootView: contentView)
-        controller.view.frame = NSRect(x: 0, y: 0, width: 1400, height: 800)
+        controller.view.frame = NSRect(x: 0, y: 0, width: 1000, height: 700)
 //        controller.view.frame = window.contentLayoutRect
         
 //        window.contentView = controller.view
@@ -106,7 +108,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
         }
         
+        KeyboardShortcuts.onKeyUp(for: .toggleWindow) { [unowned self] in
+            self.menuToggle()
+            popover.contentViewController?.view.window?.makeKey()
+        }
+        NSEvent.addLocalMonitorForEvents(matching: .keyDown, handler: keyDown)
+        
         NotificationCenter.default.addObserver(self, selector: #selector(handleAlertCount(_:)), name: .wassupNewData, object: nil)
+    }
+    
+    @objc func keyDown(event: NSEvent) -> NSEvent {
+        if event.keyCode == 53 {
+            menuToggle()
+        }
+//        
+//        print("modifiers: \(event.modifierFlags.intersection(.deviceIndependentFlagsMask))")
+//        print("char: \(event.characters)")
+//
+//        switch event.modifierFlags.intersection(.deviceIndependentFlagsMask) {
+//        case [.shift, .command] where event.characters == "w":
+//            print("command shift w")
+//        case [.shift, .option] where event.characters == "w":
+//            print("option shift w")
+//        default:
+//            break
+//        }
+//
+//        if event.characters == "w" {
+//            print("we here")
+//        }
+//        NSLog("key down is \(event.keyCode)");
+       return event
     }
     
     @objc func handleAlertCount(_ notification: Notification) {
@@ -265,4 +297,10 @@ extension NSImage {
        copiedImage.isTemplate = false
        return copiedImage
    }
+}
+
+import KeyboardShortcuts
+
+extension KeyboardShortcuts.Name {
+    static let toggleWindow = Self("toggleWindow")
 }

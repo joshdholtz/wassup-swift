@@ -18,6 +18,7 @@ struct ContentView: View {
     
     @State var editView = false
     @State var secretsView = false
+    @State var settingsView = false
     @State var lastRefreshed: Date = Date.now
     
     @State var panes: [Output.Pane] = []
@@ -30,6 +31,8 @@ struct ContentView: View {
                 EditView(text: $scriptText, secrets: secretsText)
             } else if secretsView {
                 SecretsView(text: $secretsText)
+            } else if settingsView {
+                SettingsView()
             } else {
                 DashboardView(panes: $panes,
                               scriptText: $scriptText,
@@ -40,7 +43,7 @@ struct ContentView: View {
             Divider()
             
             HStack {
-                if !editView && !secretsView {
+                if !editView && !secretsView && !settingsView {
                     Button {
                         self.editView = true
                     } label: {
@@ -52,12 +55,19 @@ struct ContentView: View {
                     } label: {
                         Label("Secrets", systemImage: "lock.fill")
                     }
+                    
+                    Button {
+                        self.settingsView = true
+                    } label: {
+                        Label("Settings", systemImage: "gear")
+                    }
                 }
                 
-                if editView || secretsView {
+                if editView || secretsView || settingsView {
                     Button {
                         self.editView = false
                         self.secretsView = false
+                        self.settingsView = false
                     } label: {
                         Label("Save", systemImage: "square.grid.2x2")
                     }
@@ -65,7 +75,7 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                if !editView && !secretsView {
+                if !editView && !secretsView && !settingsView {
                     Text("Refreshed at ") + Text(lastRefreshed, style: .time)
                     Button {
                         Task {
@@ -204,13 +214,15 @@ struct PaneView: View {
                         VStack(alignment: .leading) {
                             HStack {
                                 Text(item.title)
-                                    .font(.title2)
+                                    .font(.title3)
+                                    .opacity(0.85)
                                 Spacer()
                             }
                             if let subtitle = item.subtitle {
                                 HStack {
                                     Text(subtitle)
-                                        .font(.title3)
+                                        .font(.caption)
+                                        .opacity(0.85)
                                     Spacer()
                                 }
                             }

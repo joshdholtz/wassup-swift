@@ -30,7 +30,7 @@ struct Executor {
         let runPath = path.replacingOccurrences(of: ".swift", with: "")
         
         let command = "(cd \(tempPath) && \(secretsCLI) \(runPath))"
-        print("Command: \(command)")
+//        print("Command: \(command)")
         
         let output = try shellOut(to: command)
         
