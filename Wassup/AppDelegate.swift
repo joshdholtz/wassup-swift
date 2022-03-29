@@ -64,35 +64,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItemHost: NSHostingView<StatusItemView>!
     private var statusItem: NSStatusItem!
     
+    private var window: NSWindow!
     var popover = NSPopover()
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+//        window = NSWindow(
+//            contentRect: NSRect(x: 0, y: 0, width: 480, height: 270),
+//            styleMask: [.miniaturizable, .closable, .resizable, .titled],
+//            backing: .buffered, defer: false)
+//        window.center()
+////        window.title = "Wassup"
+//        window.titlebarAppearsTransparent = true
+//        window.backgroundColor = NSColor(Color(hex: "#301934"))
+//        window.makeKeyAndOrderFront(nil)
+        
         let contentView = ContentView()
         
+        let controller = NSHostingController(rootView: contentView)
+        controller.view.frame = NSRect(x: 0, y: 0, width: 1400, height: 800)
+//        controller.view.frame = window.contentLayoutRect
+        
+//        window.contentView = controller.view
+        
+        popover.contentViewController = controller
         popover.behavior = .transient
         popover.animates = true
         popover.delegate = self
         
-        let controller = NSHostingController(rootView: contentView)
-        controller.view.frame = NSRect(x: 0, y: 0, width: 800, height: 600)
-        popover.contentViewController = controller
-        
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-//
-//        let view = NSHostingView(rootView: ContentView())
-//        view.frame = NSRect(x: 0, y: 0, width: 400, height: 400)
-//
-//        let menuItem = NSMenuItem()
-//        menuItem.view = view
-//
-//        let menu = NSMenu()
-//        menu.addItem(menuItem)
-//
-//        statusItem.menu = menu
-//
+
         if let button = statusItem.button {
-//            button.image = NSImage(systemSymbolName: "seal", accessibilityDescription: "1")
-            
             let statusItemView = StatusItemView(counts: [:])
             
             statusItemHost = NSHostingView(rootView: statusItemView)
@@ -106,7 +107,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleAlertCount(_:)), name: .wassupNewData, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(handle), name: .wassupResetData, object: nil)
     }
     
     @objc func handleAlertCount(_ notification: Notification) {
@@ -122,6 +122,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let menuButton = statusItem.button {
             self.popover.show(relativeTo: menuButton.bounds, of: menuButton, preferredEdge: .minY)
         }
+//        if NSApp.isActive {
+//
+//        } else {
+//            NSApp.activate(ignoringOtherApps: true)
+//        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

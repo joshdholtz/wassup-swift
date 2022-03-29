@@ -28,18 +28,18 @@ struct EditView: View {
                        fontSize: self.$fontSize,
                        flags: [ .selectable, .editable, .smartIndent])
                 .padding()
-            Button {
-                do {
-                    let exe = Executor()
-                    let output = try exe.load(script: text, secrets: secrets)
-                    print("OUTPUT BELOW")
-                    print(output)
-                } catch {
-                    print("Edit run error: \(error)")
-                }
-            } label: {
-                Text("Run")
-            }
+//            Button {
+//                do {
+//                    let exe = Executor()
+//                    let output = try exe.load(script: text, secrets: secrets)
+//                    print("OUTPUT BELOW")
+//                    print(output)
+//                } catch {
+//                    print("Edit run error: \(error)")
+//                }
+//            } label: {
+//                Text("Run")
+//            }
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()
     }

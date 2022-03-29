@@ -18,6 +18,11 @@ struct ContentView: View {
     
     @State var editView = false
     @State var secretsView = false
+    @State var lastRefreshed: Date = Date.now
+    
+    @State var panes: [Output.Pane] = []
+    
+    let timer = Timer.publish(every: 60 * 5, on: .main, in: .common).autoconnect()
 
     var body: some View {
         VStack {
@@ -26,138 +31,64 @@ struct ContentView: View {
             } else if secretsView {
                 SecretsView(text: $secretsText)
             } else {
-                DashboardView(scriptText: $scriptText, secretsText: $secretsText, editView: $editView, secretsView: $secretsView)
+                DashboardView(panes: $panes,
+                              scriptText: $scriptText,
+                              secretsText: $secretsText,
+                              lastRefreshed: $lastRefreshed)
             }
-        }
-    }
-}
-
-struct DashboardView: View {
-    
-    @Binding var scriptText: String
-    @Binding var secretsText: String
-    
-    @Binding var editView: Bool
-    @Binding var secretsView: Bool
-    
-    @State var panes: [Output.Pane] = []
-    
-    @State var selectedPane = 0
-    @State var lastRefreshed: Date = Date.now
-    
-    let timer = Timer.publish(every: 60 * 5, on: .main, in: .common).autoconnect()
-    
-    var maxWidth: Double {
-        var max = 0
-        
-        for pane in self.panes {
-            let v = pane.x + pane.width
-            if v > max {
-                max = v
-            }
-        }
-        
-        return Double(max)
-    }
-    
-    var maxHeight: Double {
-        var max = 0
-        
-        for pane in self.panes {
-            let v = pane.y + pane.height
-            if v > max {
-                max = v
-            }
-        }
-        
-        return Double(max)
-    }
-    
-    init(scriptText: Binding<String>, secretsText: Binding<String>, editView: Binding<Bool>, secretsView: Binding<Bool>) {
-        self._scriptText = scriptText
-        self._secretsText = secretsText
-        self._editView = editView
-        self._secretsView = secretsView
-    }
-    
-    var body: some View {
-        VStack(alignment: .trailing, spacing: 0) {
-            VStack(alignment: .leading) {
-                if !self.panes.isEmpty {
-                    
-                    ZStack {
-                        GeometryReader { proxy in
-                            ForEach(self.panes, id: \.self.name) { pane in
-                                PaneView(pane: pane)
-                                    .padding()
-                                    .frame(width: proxy.size.width * (Double(pane.width) / maxWidth),
-                                           height: proxy.size.height * (Double(pane.height) / maxHeight))
-                                    .offset(x: (proxy.size.width / maxWidth) * CGFloat(pane.x),
-                                            y: (proxy.size.height / maxHeight) * CGFloat(pane.y))
-//                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            }
-                        }
-                    }.frame(maxWidth: .infinity, maxHeight: .infinity)
-                    
-                    Divider()
-                    
-                    HStack {
-                        if !editView && !secretsView {
-                            Button {
-                                self.editView = true
-                            } label: {
-                                Label("Edit", systemImage: "pencil.circle.fill")
-                            }
-                        
-                            Button {
-                                self.secretsView = true
-                            } label: {
-                                Label("Secrets", systemImage: "lock.fill")
-                            }
-                        }
-                        
-                        if editView || secretsView {
-                            Button {
-                                self.editView = false
-                                self.secretsView = false
-                            } label: {
-                                Label("Save", systemImage: "square.grid.2x2")
-                            }
-                        }
-                        
-                        Spacer()
-                        
-                        Text("Refreshed at ") + Text(lastRefreshed, style: .time)
-                        Button {
-                            Task {
-                                await refresh()
-                            }
-                        } label: {
-                            Label("Refresh", systemImage: "arrow.clockwise")
-                        }
+            
+            Divider()
+            
+            HStack {
+                if !editView && !secretsView {
+                    Button {
+                        self.editView = true
+                    } label: {
+                        Label("Edit", systemImage: "pencil.circle.fill")
                     }
-                    
-                } else {
-                    Text("Loading...")
+                
+                    Button {
+                        self.secretsView = true
+                    } label: {
+                        Label("Secrets", systemImage: "lock.fill")
+                    }
                 }
-            }.frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding(.horizontal, 20)
+                
+                if editView || secretsView {
+                    Button {
+                        self.editView = false
+                        self.secretsView = false
+                    } label: {
+                        Label("Save", systemImage: "square.grid.2x2")
+                    }
+                }
+                
+                Spacer()
+                
+                if !editView && !secretsView {
+                    Text("Refreshed at ") + Text(lastRefreshed, style: .time)
+                    Button {
+                        Task {
+                            await refresh()
+                        }
+                    } label: {
+                        Label("Refresh", systemImage: "arrow.clockwise")
+                    }
+                }
+            }.padding(.horizontal, 20)
                 .padding(.bottom, 20)
-        }.frame(maxWidth: .infinity, maxHeight: .infinity)
-            .task {
+                .padding(.top, 10)
+        }
+        .background(Color(hex: "#301934"))
+        .task {
+            await refresh()
+        }
+        .onReceive(timer) { input in
+            print("should refresh")
+            Task {
                 await refresh()
             }
-            .onReceive(timer) { input in
-                print("should refresh")
-                Task {
-                    await refresh()
-                }
-            }
-//            .onReceive(NotificationCenter.default.publisher(for: .popoverDidShow)) { _ in
-//                DispatchQueue.main.async {
-//                    self.lastRefreshedText = self.lastRefreshed.timeAgoDisplay()
-//                }
-//            }
+        }
     }
     
     func refresh() async {
@@ -185,6 +116,74 @@ struct DashboardView: View {
     }
 }
 
+struct DashboardView: View {
+    
+    @Binding var panes: [Output.Pane]
+    @Binding var scriptText: String
+    @Binding var secretsText: String
+    @Binding var lastRefreshed: Date
+    
+    var maxWidth: Double {
+        var max = 0
+        
+        for pane in self.panes {
+            let v = pane.x + pane.width
+            if v > max {
+                max = v
+            }
+        }
+        
+        return Double(max)
+    }
+    
+    var maxHeight: Double {
+        var max = 0
+        
+        for pane in self.panes {
+            let v = pane.y + pane.height
+            if v > max {
+                max = v
+            }
+        }
+        
+        return Double(max)
+    }
+    
+    init(panes: Binding<[Output.Pane]>, scriptText: Binding<String>, secretsText: Binding<String>, lastRefreshed: Binding<Date>) {
+        self._panes = panes
+        self._scriptText = scriptText
+        self._secretsText = secretsText
+        self._lastRefreshed = lastRefreshed
+    }
+    
+    var body: some View {
+        VStack(alignment: .trailing, spacing: 0) {
+            VStack(alignment: .leading) {
+                if !self.panes.isEmpty {
+                    
+                    ZStack {
+                        GeometryReader { proxy in
+                            ForEach(self.panes, id: \.self.name) { pane in
+                                PaneView(pane: pane)
+                                    .padding(.all, 5)
+                                    .frame(width: proxy.size.width * (Double(pane.width) / maxWidth),
+                                           height: proxy.size.height * (Double(pane.height) / maxHeight))
+                                    .offset(x: (proxy.size.width / maxWidth) * CGFloat(pane.x),
+                                            y: (proxy.size.height / maxHeight) * CGFloat(pane.y))
+                            }
+                        }
+                    }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                    
+                } else {
+                    Text("Loading...")
+                }
+            }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(.horizontal, 10)
+                .padding(.top, 10)
+        }.frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
 struct PaneView: View {
     @Environment(\.openURL) var openURL
     
@@ -192,18 +191,28 @@ struct PaneView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text(pane.name)
-                .font(.title)
-                .frame(maxWidth: .infinity)
+            HStack {
+                Text(pane.name)
+                    .multilineTextAlignment(.leading)
+                    .font(.title)
+                    .padding(.trailing, 20)
+                Spacer()
+            }.frame(maxWidth: .infinity)
             ScrollView {
                 ForEach(pane.items, id: \.self.title) { item in
                     HStack {
                         VStack(alignment: .leading) {
-                            Text(item.title)
-                                .font(.title2)
+                            HStack {
+                                Text(item.title)
+                                    .font(.title2)
+                                Spacer()
+                            }
                             if let subtitle = item.subtitle {
-                                Text(subtitle)
-                                    .font(.title3)
+                                HStack {
+                                    Text(subtitle)
+                                        .font(.title3)
+                                    Spacer()
+                                }
                             }
                         }
                         Spacer()
@@ -218,7 +227,6 @@ struct PaneView: View {
                                 case .shell(_):
                                     print("nothing yet")
                                 }
-    //                            openURL(URL(string: item.htmlUrl)!)
                             } label: {
                                 Text(action.name)
                             }
@@ -228,5 +236,36 @@ struct PaneView: View {
                 }.padding(.trailing, 20)
             }.frame(maxWidth: .infinity)
         }.frame(maxWidth: .infinity)
+            .padding(.leading, 20)
+            .padding(.vertical, 20)
+            .background(Color.black.opacity(0.1))
+            .cornerRadius(4)
+    }
+}
+
+extension Color {
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let a, r, g, b: UInt64
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (a, r, g, b) = (1, 1, 1, 0)
+        }
+
+        self.init(
+            .sRGB,
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue:  Double(b) / 255,
+            opacity: Double(a) / 255
+        )
     }
 }
