@@ -21,39 +21,12 @@ struct ContentView: View {
 
     var body: some View {
         VStack {
-            HStack {
-                Spacer()
-                
-                if !editView && !secretsView {
-                    Button {
-                        self.editView = true
-                    } label: {
-                        Label("Edit", systemImage: "pencil.circle.fill")
-                    }
-                
-                    Button {
-                        self.secretsView = true
-                    } label: {
-                        Label("Secrets", systemImage: "lock.fill")
-                    }
-                }
-                
-                if editView || secretsView {
-                    Button {
-                        self.editView = false
-                        self.secretsView = false
-                    } label: {
-                        Label("Save", systemImage: "square.grid.2x2")
-                    }
-                }
-            }.padding()
-            
             if editView {
                 EditView(text: $scriptText, secrets: secretsText)
             } else if secretsView {
                 SecretsView(text: $secretsText)
             } else {
-                DashboardView(scriptText: $scriptText, secretsText: $secretsText)
+                DashboardView(scriptText: $scriptText, secretsText: $secretsText, editView: $editView, secretsView: $secretsView)
             }
         }
     }
@@ -63,6 +36,9 @@ struct DashboardView: View {
     
     @Binding var scriptText: String
     @Binding var secretsText: String
+    
+    @Binding var editView: Bool
+    @Binding var secretsView: Bool
     
     @State var panes: [Output.Pane] = []
     
@@ -97,9 +73,11 @@ struct DashboardView: View {
         return Double(max)
     }
     
-    init(scriptText: Binding<String>, secretsText: Binding<String>) {
+    init(scriptText: Binding<String>, secretsText: Binding<String>, editView: Binding<Bool>, secretsView: Binding<Bool>) {
         self._scriptText = scriptText
         self._secretsText = secretsText
+        self._editView = editView
+        self._secretsView = secretsView
     }
     
     var body: some View {
@@ -123,7 +101,30 @@ struct DashboardView: View {
                     
                     Divider()
                     
-                    HStack {                        
+                    HStack {
+                        if !editView && !secretsView {
+                            Button {
+                                self.editView = true
+                            } label: {
+                                Label("Edit", systemImage: "pencil.circle.fill")
+                            }
+                        
+                            Button {
+                                self.secretsView = true
+                            } label: {
+                                Label("Secrets", systemImage: "lock.fill")
+                            }
+                        }
+                        
+                        if editView || secretsView {
+                            Button {
+                                self.editView = false
+                                self.secretsView = false
+                            } label: {
+                                Label("Save", systemImage: "square.grid.2x2")
+                            }
+                        }
+                        
                         Spacer()
                         
                         Text("Refreshed at ") + Text(lastRefreshed, style: .time)
@@ -140,7 +141,8 @@ struct DashboardView: View {
                     Text("Loading...")
                 }
             }.frame(maxWidth: .infinity, maxHeight: .infinity)
-                .padding(20)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 20)
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
             .task {
                 await refresh()
@@ -192,6 +194,7 @@ struct PaneView: View {
         VStack(alignment: .leading) {
             Text(pane.name)
                 .font(.title)
+                .frame(maxWidth: .infinity)
             ScrollView {
                 ForEach(pane.items, id: \.self.title) { item in
                     HStack {
@@ -222,8 +225,8 @@ struct PaneView: View {
                         }
 
                     }
-                }
-            }
-        }
+                }.padding(.trailing, 20)
+            }.frame(maxWidth: .infinity)
+        }.frame(maxWidth: .infinity)
     }
 }
