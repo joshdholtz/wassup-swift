@@ -83,7 +83,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let contentView = ContentView()
         
         let controller = NSHostingController(rootView: contentView)
-        controller.view.frame = NSRect(x: 0, y: 0, width: 1000, height: 700)
+        controller.view.frame = NSRect(x: 0, y: 0, width: 1200, height: 700)
 //        controller.view.frame = window.contentLayoutRect
         
 //        window.contentView = controller.view
@@ -121,7 +121,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if event.keyCode == 53 {
             menuToggle()
         }
-//        
+//
 //        print("modifiers: \(event.modifierFlags.intersection(.deviceIndependentFlagsMask))")
 //        print("char: \(event.characters)")
 //
