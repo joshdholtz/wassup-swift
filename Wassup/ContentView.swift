@@ -215,13 +215,13 @@ struct PaneView: View {
                             HStack {
                                 Text(item.title)
                                     .font(.title3)
-                                    .opacity(0.85)
+//                                    .opacity(0.85)
                                 Spacer()
                             }
                             if let subtitle = item.subtitle {
                                 HStack {
                                     Text(subtitle)
-                                        .font(.caption)
+                                        .font(.callout)
                                         .opacity(0.85)
                                     Spacer()
                                 }

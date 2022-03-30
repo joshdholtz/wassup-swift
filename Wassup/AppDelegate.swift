@@ -10,6 +10,8 @@ import SwiftUI
 
 import KeyboardShortcuts
 
+import Sparkle
+
 struct StatusItemView: View {
     
     let counts: [Output.Pane.CountAlert: Int]
@@ -69,7 +71,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var window: NSWindow!
     var popover = NSPopover()
     
+    var updaterController: SPUStandardUpdaterController! = nil
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: self, userDriverDelegate: nil)
+        
 //        window = NSWindow(
 //            contentRect: NSRect(x: 0, y: 0, width: 480, height: 270),
 //            styleMask: [.miniaturizable, .closable, .resizable, .titled],
@@ -83,7 +89,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let contentView = ContentView()
         
         let controller = NSHostingController(rootView: contentView)
-        controller.view.frame = NSRect(x: 0, y: 0, width: 1200, height: 700)
+//        controller.view.frame = NSRect(x: 0, y: 0, width: 1200, height: 700)
 //        controller.view.frame = window.contentLayoutRect
         
 //        window.contentView = controller.view
@@ -108,6 +114,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             
         }
         
+        sizePopover()
+        
         KeyboardShortcuts.onKeyUp(for: .toggleWindow) { [unowned self] in
             self.menuToggle()
             popover.contentViewController?.view.window?.makeKey()
@@ -115,6 +123,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NSEvent.addLocalMonitorForEvents(matching: .keyDown, handler: keyDown)
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleAlertCount(_:)), name: .wassupNewData, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleWindowSizeChanged(_:)), name: .wassupWindowSizeChanged, object: nil)
     }
     
     @objc func keyDown(event: NSEvent) -> NSEvent {
@@ -148,6 +157,33 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let statusItemView = StatusItemView(counts: counts)
             statusItemHost.rootView = statusItemView
         }
+    }
+    
+    @objc func handleWindowSizeChanged(_ notification: Notification) {
+        DispatchQueue.main.async { [unowned self] in
+            self.sizePopover()
+        }
+    }
+    
+    func sizePopover() {
+        var width = UserDefaults.standard.integer(forKey: "windowWidth")
+        var height = UserDefaults.standard.integer(forKey: "windowHeight")
+        
+        if width == 0 {
+            width = 1200
+            UserDefaults.standard.set(width, forKey: "windowWidth")
+        } else if width < 400 {
+            width = 400
+        }
+        if height == 0 {
+            height = 700
+            UserDefaults.standard.set(height, forKey: "windowHeight")
+        } else if height < 400 {
+            height = 400
+        }
+        
+//        popover.contentViewController?.view.frame = NSRect(x: 0, y: 0, width: width, height: height)
+        popover.contentSize = NSSize(width: width, height: height)
     }
     
     @objc func menuToggle() {
@@ -278,11 +314,23 @@ extension AppDelegate: NSPopoverDelegate {
     }
 }
 
+extension AppDelegate: SPUUpdaterDelegate {
+    func updaterDidNotFindUpdate(_ updater: SPUUpdater) {
+        print("Did not find update")
+    }
+    
+    func updaterDidNotFindUpdate(_ updater: SPUUpdater, error: Error) {
+        print("Did not find update: \(error)")
+    }
+}
+
 extension Notification.Name {
     static let popoverDidShow = Notification.Name("popoverDidShow")
     
     static let wassupNewData = Notification.Name("wassupNewData")
     static let wassupResetData = Notification.Name("wassupResetData")
+    
+    static let wassupWindowSizeChanged = Notification.Name("wassupWindowSizeChanged")
 }
 
 extension NSImage {

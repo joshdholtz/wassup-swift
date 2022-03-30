@@ -4,5 +4,9 @@
 <dict>
 	<key>LSUIElement</key>
 	<true/>
+	<key>SUFeedURL</key>
+	<string>https://www.joshholtz.com/wassup-swift-releases/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>dtM4lowVB2ay82fskiU0ulzcli6cdUOEI03tqq4pAFY=</string>
 </dict>
 </plist>
