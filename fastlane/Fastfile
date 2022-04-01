@@ -10,6 +10,7 @@ lane :clear do
 end
 
 lane :release do
+  clear
 	build
 	deploy
 end
@@ -31,6 +32,8 @@ lane :build do
     package: app_path,
     verbose: true
   )
+
+  FileUtils.rm("../build/Wassup.app.zip")
 end
 
 lane :deploy do
