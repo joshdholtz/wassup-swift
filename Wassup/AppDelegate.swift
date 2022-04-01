@@ -86,7 +86,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //        window.backgroundColor = NSColor(Color(hex: "#301934"))
 //        window.makeKeyAndOrderFront(nil)
         
-        let contentView = ContentView()
+        let contentView = ContentView().preferredColorScheme(.dark)
         
         let controller = NSHostingController(rootView: contentView)
 //        controller.view.frame = NSRect(x: 0, y: 0, width: 1200, height: 700)
