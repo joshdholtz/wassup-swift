@@ -1,0 +1,79 @@
+require "dotenv"
+
+before_all do
+	Dotenv.load ".env.secret"
+  app_store_connect_api_key
+end
+
+lane :clear do
+  FileUtils.rm_rf("../build")
+end
+
+lane :release do
+	build
+	deploy
+end
+
+lane :build do
+  gym(
+    xcargs: "-allowProvisioningUpdates",
+    export_method: "developer-id",
+    export_options: {
+      "signingStyle": "automatic",
+    },
+    skip_profile_detection: "true",
+    output_directory: "build",
+    derived_data_path: "build/derived_data"
+  )
+
+  app_path = File.absolute_path(Dir["../build/*.app"].first)
+  notarize(
+    package: app_path,
+    verbose: true
+  )
+end
+
+lane :deploy do
+  sparkle_path = File.absolute_path("../build/derived_data/SourcePackages/artifacts/Sparkle")
+
+  app_path = File.absolute_path(Dir["../build/*.app"].first)
+  zip_path = zip(path: app_path)
+
+  sparkle_output = sh("#{sparkle_path}/bin/sign_update #{zip_path}")
+
+  description = prompt(
+    text: "Changelog",
+    multi_line_end_keyword: "END" 
+  )
+
+  version = get_version_number
+
+  appcast_content = File.read("appcast.xml.tmpl")
+  appcast_content.gsub!("REPLACE_SPARKLE_VERSION", version)
+  appcast_content.gsub!("REPLACE_SPARKLE_DESCRIPTION", description)
+  appcast_content.gsub!("REPLACE_SPARKLE_SIGN_UPDATE", sparkle_output)
+
+  require 'base64'
+	base64_content = Base64.encode64(appcast_content)
+
+	get_file = github_api(
+		http_method: "GET",
+		path: "/repos/joshdholtz/wassup-swift-releases/contents/appcast.xml",
+	)
+	sha = JSON.parse(get_file[:body])["sha"]
+
+	github_api(
+		http_method: "PUT",
+		path: "/repos/joshdholtz/wassup-swift-releases/contents/appcast.xml",
+		body: { message: "Update #{version}", content: base64_content, sha: sha }
+	)
+
+  set_github_release(
+    repository_name: "joshdholtz/wassup-swift-releases",
+    name: version,
+    tag_name: version,
+    description: description,
+    commitish: "main",
+    upload_assets: zip_path
+  )
+end

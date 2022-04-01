@@ -12,7 +12,7 @@ func thing() {
         Pane("Open PRs") {
             GitHubSearch("repo:fastlane/fastlane is:pr is:open")
                 .action("Open") { thing in
-                    .url(thing.htmlUrl)
+                    .url(thing.url)
                 }
         }
         Pane("High Activity Issues (7 Days, 10+ interactions)", alert: .high) {

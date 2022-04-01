@@ -226,6 +226,15 @@ struct PaneView: View {
                                     Spacer()
                                 }
                             }
+
+                            ForEach(item.extras, id: \.self) { extra in
+                                HStack {
+                                    Text(extra)
+                                        .font(.callout)
+                                        .opacity(0.85)
+                                    Spacer()
+                                }
+                            }
                         }
                         Spacer()
                         

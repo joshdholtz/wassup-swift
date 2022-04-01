@@ -131,3 +131,5 @@ fastlane/*.p8
 
 *.swp
 dsyms/
+
+build

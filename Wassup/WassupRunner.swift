@@ -31,7 +31,7 @@ enum Auth {
     }
 }
 
-func httpRequest(url: String, method: String = "GET", headers: [String: String] = [:], auth: Auth? = nil) throws -> (Data?, URLResponse) {
+func httpRequest(url: String, method: String = "GET", headers: [String: String] = [:], body: Data? = nil, auth: Auth? = nil) throws -> (Data?, URLResponse) {
     var data: Data? = nil
     var response: URLResponse? = nil
     var error: Error? = nil
@@ -44,6 +44,7 @@ func httpRequest(url: String, method: String = "GET", headers: [String: String] 
     var request = URLRequest(url: URL(string: url)!)
     request.httpMethod = method
     request.allHTTPHeaderFields = allHeaders
+    request.httpBody = body
     let semaphore: DispatchSemaphore = DispatchSemaphore(value: 0)
     let task = URLSession.shared.dataTask(with: request) { (theData, theResponse, theError) in
         data = theData
@@ -64,6 +65,7 @@ func httpRequest(url: String, method: String = "GET", headers: [String: String] 
 protocol ContentItem: Codable {
     var itemTitle: String { get }
     var itemSubtitle: String? { get }
+    var extras: [String] { get }
     var actions: [Output.Action] { get }
 }
 
@@ -87,6 +89,7 @@ struct Output: Codable {
     struct Item: Codable {
         let title: String
         let subtitle: String?
+        let extras: [String]
         
         let meta: String?
         
@@ -181,7 +184,10 @@ struct Item: ContentItem {
     var itemSubtitle: String? {
         return subtitle
     }
-}
+    var extras: [String] {
+        return []
+    }
+ }
 
 protocol ContentBuilder {
     
@@ -193,7 +199,7 @@ extension ContentItem {
     }
 }
 
-typealias GitHubSearchAction = (GitHub.SearchResponse.Item) -> (ActionValue)
+typealias GitHubSearchAction = (GitHub.GraphSearchResponse.Search.Node) -> (ActionValue)
 extension GitHubSearch {
     func action(_ name: String, action: @escaping GitHubSearchAction) -> Self {
         var actions = self.actions
@@ -210,6 +216,7 @@ enum ActionValue: Codable {
 struct ReturnContentItem<T: Codable>: ContentItem {
     let itemTitle: String
     let itemSubtitle: String?
+    let extras: [String]
 
     let contentItem: T
     
@@ -239,31 +246,42 @@ struct GitHubSearch: ContentBuilder {
     }
     
     var q: String
+    var showExtras: Bool
     var qualifiers: [Qualifer]
     
     var actions: [String: GitHubSearchAction]
     
-    init(_ q: String, _ qualifiers: [Qualifer] = [], _ actions: [String: GitHubSearchAction]? = nil) {
+    init(_ q: String, _ qualifiers: [Qualifer] = [], showExtras: Bool = false, _ actions: [String: GitHubSearchAction]? = nil) {
         self.q = q
         self.qualifiers = qualifiers
+        self.showExtras = showExtras
         self.actions = actions ?? [
             "Open": { item in
-                return .url(item.htmlUrl)
+                return .url(item.url)
             }
         ]
     }
-        
-    func toItems() -> [ReturnContentItem<GitHub.SearchResponse.Item>] {
+    
+    func toItems() -> [ReturnContentItem<GitHub.GraphSearchResponse.Search.Node>] {
         do {
             let newQ = ([q] + qualifiers.map({$0.value})).joined(separator: " ")
             
-            let encodedQ = newQ.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? newQ
+//            let encodedQ = newQ.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? newQ
             
             let githubUsername = ProcessInfo.processInfo.environment["GITHUB_USERNAME"]!.trimmingCharacters(in: .whitespacesAndNewlines)
             let githubApiKey = ProcessInfo.processInfo.environment["GITHUB_API_KEY"]!.trimmingCharacters(in: .whitespacesAndNewlines)
             
-            let url = "https://api.github.com/search/issues?q=\(encodedQ)"
-            let (data, _) = try httpRequest(url: url, auth: .basic(githubUsername, githubApiKey))
+            let url = "https://api.github.com/graphql"
+            let query = GitHub.makeSearchQuery(q: newQ)
+            
+            let body = try! JSONEncoder().encode([
+                "query": query
+            ])
+            
+//            print("JSON BODY")
+//            print(String(data: body, encoding: .utf8))
+            
+            let (data, _) = try httpRequest(url: url, method: "POST", body: body, auth: .basic(githubUsername, githubApiKey))
             
 //            print("DATA")
 //            print(String(data: data!, encoding: .utf8))
@@ -272,11 +290,12 @@ struct GitHubSearch: ContentBuilder {
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             decoder.dateDecodingStrategy = .iso8601
 
-            let decodedResponse = try decoder.decode(GitHub.SearchResponse.self, from: data!)
-            return decodedResponse.items.map { item in
+            let decodedResponse = try decoder.decode(GitHub.GraphSearchResponse.self, from: data!)
+            return decodedResponse.data.search.nodes.map { item in
                 return ReturnContentItem(
                     itemTitle: item.itemTitle,
                     itemSubtitle: item.itemSubtitle,
+                    extras: showExtras ? item.extras : [],
                     contentItem: item,
                     actions: actions.map({ (key: String, value: GitHubSearchAction) in
                         let theValue = value(item)
@@ -291,6 +310,45 @@ struct GitHubSearch: ContentBuilder {
         
         return []
     }
+        
+//    func toItemsOld() -> [ReturnContentItem<GitHub.SearchResponse.Item>] {
+//        do {
+//            let newQ = ([q] + qualifiers.map({$0.value})).joined(separator: " ")
+//            
+//            let encodedQ = newQ.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? newQ
+//            
+//            let githubUsername = ProcessInfo.processInfo.environment["GITHUB_USERNAME"]!.trimmingCharacters(in: .whitespacesAndNewlines)
+//            let githubApiKey = ProcessInfo.processInfo.environment["GITHUB_API_KEY"]!.trimmingCharacters(in: .whitespacesAndNewlines)
+//            
+//            let url = "https://api.github.com/search/issues?q=\(encodedQ)"
+//            let (data, _) = try httpRequest(url: url, auth: .basic(githubUsername, githubApiKey))
+//            
+////            print("DATA")
+////            print(String(data: data!, encoding: .utf8))
+//            
+//            let decoder = JSONDecoder()
+//            decoder.keyDecodingStrategy = .convertFromSnakeCase
+//            decoder.dateDecodingStrategy = .iso8601
+//
+//            let decodedResponse = try decoder.decode(GitHub.SearchResponse.self, from: data!)
+//            return decodedResponse.items.map { item in
+//                return ReturnContentItem(
+//                    itemTitle: item.itemTitle,
+//                    itemSubtitle: item.itemSubtitle,
+//                    contentItem: item,
+//                    actions: actions.map({ (key: String, value: GitHubSearchAction) in
+//                        let theValue = value(item)
+//                        return Output.Action(name: key, value: theValue)
+//                    })
+//                )
+//            }
+//        } catch {
+//            // TODO: Handle this error
+//            print("Error in GitHub Search: \(error)")
+//        }
+//        
+//        return []
+//    }
 }
 
 struct Pane {
@@ -338,10 +396,11 @@ extension Dashboard {
             let outputItems: [Output.Item] = pane.contents().map { contentItem -> Output.Item in
                 let title = contentItem.itemTitle
                 let subtitle = contentItem.itemSubtitle
+                let extras = contentItem.extras
                 let meta = contentItem.toString()
                 let actions = contentItem.actions
                 
-                return Output.Item(title: title, subtitle: subtitle, meta: meta, actions: actions)
+                return Output.Item(title: title, subtitle: subtitle, extras: extras, meta: meta, actions: actions)
             }
             
             let outputPane = Output.Pane(name: pane.name,

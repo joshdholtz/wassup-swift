@@ -34,8 +34,8 @@ struct Executor {
         
         let output = try shellOut(to: command)
         
-//        print("OUTPUT")
-//        print(output)
+        print("OUTPUT")
+        print(output)
         
         let data = output.data(using: .utf8)
         let decoder = JSONDecoder()
