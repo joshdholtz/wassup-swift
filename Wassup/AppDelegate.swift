@@ -129,6 +129,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func keyDown(event: NSEvent) -> NSEvent {
         if event.keyCode == 53 {
             menuToggle()
+            popover.contentViewController?.view.window?.makeKey()
         }
 //
 //        print("modifiers: \(event.modifierFlags.intersection(.deviceIndependentFlagsMask))")

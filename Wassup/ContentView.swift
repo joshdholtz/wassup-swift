@@ -110,8 +110,11 @@ struct ContentView: View {
             let exe = Executor()
             let output = try exe.load(script: scriptText, secrets: secretsText)
             
+            // TODO: Fix for multiple dashboards
+            let onePanes = output.dashboards.first?.panes ?? []
+            
             var counts = [Output.Pane.CountAlert: Int]()
-            for pane in output.panes {
+            for pane in onePanes {
                 let count = counts[pane.alert] ?? 0
                 counts[pane.alert] = count + pane.items.count
             }
@@ -119,7 +122,7 @@ struct ContentView: View {
             NotificationCenter.default.post(name: .wassupNewData, object: nil, userInfo: counts)
             
             self.lastRefreshed = Date.now
-            self.panes = output.panes
+            self.panes = onePanes
         } catch {
             print("Refresh error: \(error)")
         }
@@ -195,8 +198,6 @@ struct DashboardView: View {
 }
 
 struct PaneView: View {
-    @Environment(\.openURL) var openURL
-    
     let pane: Output.Pane
     
     var body: some View {
@@ -235,23 +236,14 @@ struct PaneView: View {
                                     Spacer()
                                 }
                             }
+                            Spacer()
                         }
                         Spacer()
                         
-                        ForEach(item.actions, id: \.self.name) { action in
-                            Button {
-                                switch action.value {
-                                case .url(let url):
-                                    if let url = URL(string: url) {
-                                        openURL(url)
-                                    }
-                                case .shell(_):
-                                    print("nothing yet")
-                                }
-                            } label: {
-                                Text(action.name)
-                            }
-                        }
+                        VStack {
+                            Actions(item: item)
+                            Spacer()
+                        }.padding(.top, 5)
 
                     }
                 }.padding(.trailing, 20)
@@ -262,6 +254,50 @@ struct PaneView: View {
             .background(Color.black.opacity(0.1))
             .cornerRadius(4)
     }
+}
+
+struct Actions: View {
+    @Environment(\.openURL) var openURL
+    
+    let item: Output.Item
+    
+    var body: some View {
+        HStack() {
+            ForEach(Array(item.actions.enumerated()), id: \.offset) { index, action in
+                Button {
+                    switch action.value {
+                    case .url(let url):
+                        if let url = URL(string: url) {
+                            openURL(url)
+                        }
+                    case .shell(let command):
+                        let _ = try? shellOut(to: command)
+                    }
+                } label: {
+                    HStack {
+                        if let image = action.image {
+                            Image(systemName: image)
+                        }
+                        if let name = action.name {
+                            Text(name)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct RoundedRectangleButtonStyle: ButtonStyle {
+  func makeBody(configuration: Configuration) -> some View {
+    HStack {
+      configuration.label.foregroundColor(.white)
+    }
+    .padding(.horizontal, 8)
+    .padding(.vertical, 4)
+    .background(Color(hex: "#301934").cornerRadius(4))
+    .scaleEffect(configuration.isPressed ? 0.95 : 1)
+  }
 }
 
 extension Color {

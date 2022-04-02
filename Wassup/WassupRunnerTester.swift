@@ -8,10 +8,10 @@
 import Foundation
 
 func thing() {
-    let dashboard = Dashboard("fastlane") {
+    Dashboard("fastlane") {
         Pane("Open PRs") {
             GitHubSearch("repo:fastlane/fastlane is:pr is:open")
-                .action("Open") { thing in
+                .action(label: "Open") { thing in
                     .url(thing.url)
                 }
         }
@@ -20,19 +20,21 @@ func thing() {
         }
         Pane("My PRs") {
             GitHubSearch("repo:fastlane/fastlane is:pr is:open author:joshdholtz")
+                .action(label: "Copy") { .shell("echo -n \"\($0)\" | pbcopy") }
         }
         Pane("fastlane-community PRs") {
             GitHubSearch("repo:fastlane-community/xcov is:pr is:open")
             GitHubSearch("repo:fastlane-community/danger-xcov is:pr is:open")
         }
-        Pane("Builder Test") {
-            Item("A title", subtitle: "A subtitle")
-            Item("Only a title")
-            Item("Another title", subtitle: "Another subtitle")
-        }
+//        Pane("Builder Test") {
+//            Item("A title", subtitle: "A subtitle")
+//            Item("Only a title")
+//            Item("Another title", subtitle: "Another subtitle")
+//        }
     }
     
-    if let output = try? dashboard.toString() {
-        print(output)
+    let output = Output(dashboards: Dashboards.all.map({$0.toOutput()}))
+    if let outputString = output.toString() {
+        print(outputString)
     }
 }

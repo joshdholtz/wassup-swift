@@ -1,0 +1,7 @@
+let dashboard = 
+REPLACE_HERE
+
+let output = Output(dashboards: Dashboards.all.map({$0.toOutput()}))
+if let outputString = output.toString() {
+    print(outputString)
+}

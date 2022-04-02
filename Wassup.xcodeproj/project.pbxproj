@@ -19,7 +19,7 @@
 		2C1029AC27E411A80065D145 /* ShellOut in Frameworks */ = {isa = PBXBuildFile; productRef = 2C1029AB27E411A80065D145 /* ShellOut */; };
 		2C1029AE27E4D0A30065D145 /* WassupRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1029AD27E4D0A30065D145 /* WassupRunner.swift */; };
 		2C1029B027E4D0C90065D145 /* WassupRunnerTester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1029AF27E4D0C80065D145 /* WassupRunnerTester.swift */; };
-		2C1029B227E4D5AF0065D145 /* GitHub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1029B127E4D5AE0065D145 /* GitHub.swift */; };
+		2C1029B227E4D5AF0065D145 /* GitHubSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1029B127E4D5AE0065D145 /* GitHubSearch.swift */; };
 		2C1029B427E4DD4E0065D145 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1029B327E4DD4E0065D145 /* EditView.swift */; };
 		2C1029B627E4DDB20065D145 /* WassupExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1029B527E4DDB20065D145 /* WassupExecutor.swift */; };
 		2C1029B827E4EFA40065D145 /* RunnerTemplate.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2C1029B727E4EFA40065D145 /* RunnerTemplate.txt */; };
@@ -29,6 +29,10 @@
 		2C2BFBE127F355AB0025DBAB /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 2C2BFBE027F355AB0025DBAB /* KeyboardShortcuts */; };
 		2C2BFBE327F356270025DBAB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2BFBE227F356270025DBAB /* SettingsView.swift */; };
 		2C9FB68E27F3EA5C0087C56C /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 2C9FB68D27F3EA5C0087C56C /* Sparkle */; };
+		2C9FB69127F7964D0087C56C /* DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9FB69027F7964D0087C56C /* DSL.swift */; };
+		2C9FB69427F798D80087C56C /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9FB69327F798D80087C56C /* Helpers.swift */; };
+		2C9FB69627F799440087C56C /* ContentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9FB69527F799440087C56C /* ContentItem.swift */; };
+		2C9FB69827F79A5D0087C56C /* Output.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9FB69727F79A5D0087C56C /* Output.swift */; };
 		4A6BA99926BB990502710879 /* Pods_WassupTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFA54132EC9677EDE069D092 /* Pods_WassupTests.framework */; };
 		C551F1825CFF3E7D42B2179B /* Pods_Wassup_WassupUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D8B654EA1F6F53B619A1661 /* Pods_Wassup_WassupUITests.framework */; };
 /* End PBXBuildFile section */
@@ -67,13 +71,17 @@
 		2C1029A927E2CB890065D145 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2C1029AD27E4D0A30065D145 /* WassupRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WassupRunner.swift; sourceTree = "<group>"; };
 		2C1029AF27E4D0C80065D145 /* WassupRunnerTester.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WassupRunnerTester.swift; sourceTree = "<group>"; };
-		2C1029B127E4D5AE0065D145 /* GitHub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHub.swift; sourceTree = "<group>"; };
+		2C1029B127E4D5AE0065D145 /* GitHubSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSearch.swift; sourceTree = "<group>"; };
 		2C1029B327E4DD4E0065D145 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		2C1029B527E4DDB20065D145 /* WassupExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WassupExecutor.swift; sourceTree = "<group>"; };
 		2C1029B727E4EFA40065D145 /* RunnerTemplate.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RunnerTemplate.txt; sourceTree = "<group>"; };
 		2C1029BC27EC1B070065D145 /* RunnerPart.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RunnerPart.txt; sourceTree = "<group>"; };
 		2C1029BE27EF6ACF0065D145 /* SecretsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretsView.swift; sourceTree = "<group>"; };
 		2C2BFBE227F356270025DBAB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2C9FB69027F7964D0087C56C /* DSL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSL.swift; sourceTree = "<group>"; };
+		2C9FB69327F798D80087C56C /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		2C9FB69527F799440087C56C /* ContentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentItem.swift; sourceTree = "<group>"; };
+		2C9FB69727F79A5D0087C56C /* Output.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Output.swift; sourceTree = "<group>"; };
 		5D8B654EA1F6F53B619A1661 /* Pods_Wassup_WassupUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wassup_WassupUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A297A28039FEDABC84C955A0 /* Pods_Wassup.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wassup.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFA54132EC9677EDE069D092 /* Pods_WassupTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WassupTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -146,11 +154,8 @@
 				2C1029BE27EF6ACF0065D145 /* SecretsView.swift */,
 				2C2BFBE227F356270025DBAB /* SettingsView.swift */,
 				2C1029B527E4DDB20065D145 /* WassupExecutor.swift */,
-				2C1029AD27E4D0A30065D145 /* WassupRunner.swift */,
+				2C9FB68F27F795610087C56C /* Runner */,
 				2C1029AF27E4D0C80065D145 /* WassupRunnerTester.swift */,
-				2C1029B127E4D5AE0065D145 /* GitHub.swift */,
-				2C1029BC27EC1B070065D145 /* RunnerPart.txt */,
-				2C1029B727E4EFA40065D145 /* RunnerTemplate.txt */,
 			);
 			path = Wassup;
 			sourceTree = "<group>";
@@ -170,6 +175,21 @@
 				2C10299827E2C95D0065D145 /* WassupUITestsLaunchTests.swift */,
 			);
 			path = WassupUITests;
+			sourceTree = "<group>";
+		};
+		2C9FB68F27F795610087C56C /* Runner */ = {
+			isa = PBXGroup;
+			children = (
+				2C1029AD27E4D0A30065D145 /* WassupRunner.swift */,
+				2C9FB69027F7964D0087C56C /* DSL.swift */,
+				2C9FB69527F799440087C56C /* ContentItem.swift */,
+				2C9FB69727F79A5D0087C56C /* Output.swift */,
+				2C9FB69327F798D80087C56C /* Helpers.swift */,
+				2C1029B127E4D5AE0065D145 /* GitHubSearch.swift */,
+				2C1029BC27EC1B070065D145 /* RunnerPart.txt */,
+				2C1029B727E4EFA40065D145 /* RunnerTemplate.txt */,
+			);
+			path = Runner;
 			sourceTree = "<group>";
 		};
 		F013009202DB1F7EEA85D0D8 /* Frameworks */ = {
@@ -356,15 +376,19 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Wassup/WassupRunner.swift",
-				"$(SRCROOT)/Wassup/GitHub.swift",
-				"$(SRCROOT)/Wassup/RunnerPart.txt",
+				"$(SRCROOT)/Wassup/Runner/WassupRunner.swift",
+				"$(SRCROOT)/Wassup/Runner/GitHubSearch.swift",
+				"$(SRCROOT)/Wassup/Runner/RunnerPart.txt",
+				"$(SRCROOT)/Wassup/Runner/DSL.swift",
+				"$(SRCROOT)/Wassup/Runner/Helpers.swift",
+				"$(SRCROOT)/Wassup/Runner/ContentItem.swift",
+				"$(SRCROOT)/Wassup/Runner/Output.swift",
 			);
 			name = "Generate Runner";
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(SRCROOT)/Wassup/RunnerTemplate.txt",
+				"$(SRCROOT)/Wassup/Runner/RunnerTemplate.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -417,15 +441,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C1029AE27E4D0A30065D145 /* WassupRunner.swift in Sources */,
+				2C9FB69427F798D80087C56C /* Helpers.swift in Sources */,
 				2C10297A27E2C95C0065D145 /* ViewController.swift in Sources */,
-				2C1029B227E4D5AF0065D145 /* GitHub.swift in Sources */,
+				2C1029B227E4D5AF0065D145 /* GitHubSearch.swift in Sources */,
 				2C1029B627E4DDB20065D145 /* WassupExecutor.swift in Sources */,
 				2C1029B027E4D0C90065D145 /* WassupRunnerTester.swift in Sources */,
 				2C1029BF27EF6ACF0065D145 /* SecretsView.swift in Sources */,
+				2C9FB69127F7964D0087C56C /* DSL.swift in Sources */,
+				2C9FB69827F79A5D0087C56C /* Output.swift in Sources */,
 				2C1029A827E2CAB60065D145 /* ContentView.swift in Sources */,
 				2C1029B427E4DD4E0065D145 /* EditView.swift in Sources */,
 				2C10297D27E2C95C0065D145 /* Wassup.xcdatamodeld in Sources */,
 				2C2BFBE327F356270025DBAB /* SettingsView.swift in Sources */,
+				2C9FB69627F799440087C56C /* ContentItem.swift in Sources */,
 				2C1029A627E2CA670065D145 /* main.swift in Sources */,
 				2C10297827E2C95C0065D145 /* AppDelegate.swift in Sources */,
 			);
