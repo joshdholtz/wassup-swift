@@ -35,13 +35,13 @@ struct GitHubSearch: ContentBuilder {
     
     var actions: [(String?, String?, GitHubSearchAction)]? = nil
     
-    var defaultActions: [(String?, String?, GitHubSearchAction)] =  [("Open", nil, { .url($0.url) })]
+    var defaultActions: [(String?, String?, GitHubSearchAction)] =  [(nil, "square.and.arrow.up", { .url($0.url) })]
     
     init(_ q: String, _ qualifiers: [Qualifer] = [], showExtras: Bool = false, _ actions: [(String?, String?, GitHubSearchAction)]? = nil) {
         self.q = q
         self.qualifiers = qualifiers
         self.showExtras = showExtras
-        self.actions = actions
+        self.actions = actions ?? defaultActions
     }
     
     func toItems() -> [ContentItem] {
@@ -52,7 +52,7 @@ struct GitHubSearch: ContentBuilder {
             let githubApiKey = ProcessInfo.processInfo.environment["GITHUB_API_KEY"]!.trimmingCharacters(in: .whitespacesAndNewlines)
             
             let url = "https://api.github.com/graphql"
-            let query = GitHub.makeSearchQuery(q: newQ)
+            let query = GitHubSearchData.makeSearchQuery(q: newQ)
             
             let body = try! JSONEncoder().encode([
                 "query": query
@@ -70,11 +70,11 @@ struct GitHubSearch: ContentBuilder {
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             decoder.dateDecodingStrategy = .iso8601
 
-            let decodedResponse = try decoder.decode(GitHub.GraphSearchResponse.self, from: data!)
+            let decodedResponse = try decoder.decode(GitHubSearchData.Response.self, from: data!)
             return decodedResponse.data.search.nodes.map { item in
                 let contentItem = item.asItem
                 
-                let actions = self.actions ?? defaultActions
+                let actions = self.actions ?? []
                 
                 return ContentItem(
                     title: contentItem.title,
@@ -96,10 +96,10 @@ struct GitHubSearch: ContentBuilder {
     }
 }
 
-typealias GitHubSearchAction = (GitHub.GraphSearchResponse.Search.Node) -> (ActionValue)
+typealias GitHubSearchAction = (GitHubSearchData.Response.Search.Node) -> (ActionValue)
 extension GitHubSearch {
-    func action(label name: String? = nil, image: String? = nil, action: @escaping GitHubSearchAction) -> Self {
-        let actions = (self.actions ?? []) + [(name, image, action)]
+    func action(label name: String? = nil, image: String? = nil, clearPrevious: Bool = false, action: @escaping GitHubSearchAction) -> Self {
+        let actions = (clearPrevious ? [] : self.actions ?? []) + [(name, image, action)]
         
         return GitHubSearch(self.q, self.qualifiers, actions)
     }
@@ -111,7 +111,7 @@ extension ContentArrayBuilder {
     }
 }
 
-struct GitHub {
+struct GitHubSearchData {
     static func makeSearchQuery(q: String) -> String {
     return """
 {
@@ -180,7 +180,7 @@ struct GitHub {
 """
     }
     
-    struct GraphSearchResponse: Codable {
+    struct Response: Codable {
         let data: Data
         
         struct Data: Codable {
@@ -253,7 +253,7 @@ struct GitHub {
     }
 }
 
-extension GitHub.GraphSearchResponse.Search.Node {
+extension GitHubSearchData.Response.Search.Node {
     var asItem: ContentItem {
         return ContentItem(title: _title, subtitle: _subtitle, extras: _extras, actions: _actions)
     }
