@@ -17,7 +17,7 @@ struct ContentItem: Codable {
 }
 
 enum ActionValue: Codable {
-    case url(String), shell(String)
+    case url(String), shell(String), copy(String)
 }
 
 extension ContentItem {

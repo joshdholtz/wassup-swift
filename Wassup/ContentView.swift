@@ -9,6 +9,8 @@ import SwiftUI
 
 import ShellOut
 
+import AlertToast
+
 struct ContentView: View {
     @AppStorage("scriptTextV1")
     private var scriptText: String = ""
@@ -22,6 +24,9 @@ struct ContentView: View {
     @State var lastRefreshed: Date = Date.now
     
     @State var panes: [Output.Pane] = []
+    
+    @State var showToast = false
+    @State var toastText = ""
     
     let timer = Timer.publish(every: 60 * 5, on: .main, in: .common).autoconnect()
 
@@ -98,6 +103,14 @@ struct ContentView: View {
             Task {
                 await refresh()
             }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .wassupToast, object: nil)) { output in
+            if let toastMessage = output.object as? String {
+                self.toastText = toastMessage
+                self.showToast = true
+            }
+        }.toast(isPresenting: self.$showToast, duration: 4) {
+            AlertToast(displayMode: .banner(.pop), type: .complete(.white), title: toastText, subTitle: nil)
         }
     }
     
@@ -272,6 +285,12 @@ struct Actions: View {
                         }
                     case .shell(let command):
                         let _ = try? shellOut(to: command)
+                    case .copy(let value):
+                        let pasteboard = NSPasteboard.general
+                        pasteboard.clearContents()
+                        pasteboard.setString(value, forType: .string)
+                        
+                        NotificationCenter.default.post(name: .wassupToast, object: "Copied")
                     }
                 } label: {
                     HStack {

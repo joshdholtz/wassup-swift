@@ -332,6 +332,8 @@ extension Notification.Name {
     static let wassupResetData = Notification.Name("wassupResetData")
     
     static let wassupWindowSizeChanged = Notification.Name("wassupWindowSizeChanged")
+    
+    static let wassupToast = Notification.Name("wassupToast")
 }
 
 extension NSImage {

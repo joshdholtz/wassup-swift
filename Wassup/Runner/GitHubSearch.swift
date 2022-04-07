@@ -101,7 +101,7 @@ extension GitHubSearch {
     func action(label name: String? = nil, image: String? = nil, clearPrevious: Bool = false, action: @escaping GitHubSearchAction) -> Self {
         let actions = (clearPrevious ? [] : self.actions ?? []) + [(name, image, action)]
         
-        return GitHubSearch(self.q, self.qualifiers, actions)
+        return GitHubSearch(self.q, self.qualifiers, showExtras: self.showExtras, actions)
     }
 }
 

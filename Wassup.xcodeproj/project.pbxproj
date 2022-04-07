@@ -28,6 +28,7 @@
 		2C2BFBDE27F1EF880025DBAB /* CodeEditor in Frameworks */ = {isa = PBXBuildFile; productRef = 2C2BFBDD27F1EF880025DBAB /* CodeEditor */; };
 		2C2BFBE127F355AB0025DBAB /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 2C2BFBE027F355AB0025DBAB /* KeyboardShortcuts */; };
 		2C2BFBE327F356270025DBAB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C2BFBE227F356270025DBAB /* SettingsView.swift */; };
+		2C358E7327FE67DD0004FC67 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 2C358E7227FE67DD0004FC67 /* AlertToast */; };
 		2C9FB68E27F3EA5C0087C56C /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 2C9FB68D27F3EA5C0087C56C /* Sparkle */; };
 		2C9FB69127F7964D0087C56C /* DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9FB69027F7964D0087C56C /* DSL.swift */; };
 		2C9FB69427F798D80087C56C /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9FB69327F798D80087C56C /* Helpers.swift */; };
@@ -95,6 +96,7 @@
 				2C2BFBDE27F1EF880025DBAB /* CodeEditor in Frameworks */,
 				2C9FB68E27F3EA5C0087C56C /* Sparkle in Frameworks */,
 				2C1029AC27E411A80065D145 /* ShellOut in Frameworks */,
+				2C358E7327FE67DD0004FC67 /* AlertToast in Frameworks */,
 				2C2BFBE127F355AB0025DBAB /* KeyboardShortcuts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -224,6 +226,7 @@
 				2C2BFBDD27F1EF880025DBAB /* CodeEditor */,
 				2C2BFBE027F355AB0025DBAB /* KeyboardShortcuts */,
 				2C9FB68D27F3EA5C0087C56C /* Sparkle */,
+				2C358E7227FE67DD0004FC67 /* AlertToast */,
 			);
 			productName = Wassup;
 			productReference = 2C10297427E2C95C0065D145 /* Wassup.app */;
@@ -305,6 +308,7 @@
 				2C2BFBDC27F1EF880025DBAB /* XCRemoteSwiftPackageReference "CodeEditor" */,
 				2C2BFBDF27F355AB0025DBAB /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				2C9FB68C27F3EA5C0087C56C /* XCRemoteSwiftPackageReference "Sparkle" */,
+				2C358E7127FE67DD0004FC67 /* XCRemoteSwiftPackageReference "AlertToast" */,
 			);
 			productRefGroup = 2C10297527E2C95C0065D145 /* Products */;
 			projectDirPath = "";
@@ -616,7 +620,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0.2.1;
+				CURRENT_PROJECT_VERSION = 0.2.2;
 				DEVELOPMENT_TEAM = 972KS36P2U;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -628,7 +632,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.1;
+				MARKETING_VERSION = 0.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.joshholtz.Wassup;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -645,7 +649,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0.2.1;
+				CURRENT_PROJECT_VERSION = 0.2.2;
 				DEVELOPMENT_TEAM = 972KS36P2U;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -657,7 +661,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 0.2.1;
+				MARKETING_VERSION = 0.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.joshholtz.Wassup;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -803,6 +807,14 @@
 				kind = branch;
 			};
 		};
+		2C358E7127FE67DD0004FC67 /* XCRemoteSwiftPackageReference "AlertToast" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elai950/AlertToast.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		2C9FB68C27F3EA5C0087C56C /* XCRemoteSwiftPackageReference "Sparkle" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
@@ -828,6 +840,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2C2BFBDF27F355AB0025DBAB /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
 			productName = KeyboardShortcuts;
+		};
+		2C358E7227FE67DD0004FC67 /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2C358E7127FE67DD0004FC67 /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
 		};
 		2C9FB68D27F3EA5C0087C56C /* Sparkle */ = {
 			isa = XCSwiftPackageProductDependency;
