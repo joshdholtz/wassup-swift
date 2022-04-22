@@ -297,9 +297,9 @@ extension GitHubSearchData.Response.Search.Node {
     }
 }
 
-private extension Int {
+fileprivate extension Int {
 
-    private var daysAgo: Date {
+    var daysAgo: Date {
         return Calendar.current.date(byAdding: .day, value: -self, to: Date())!
     }
 
