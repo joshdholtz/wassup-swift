@@ -15,16 +15,18 @@ struct GitHubSearch: ContentBuilder {
             return dateFormatter
         }
         
-        case createdLessThan(Int), createdMoreThan(Int)
+        case createdLessThan(Int), createdMoreThan(Int), closedLessThan(Int), closedMoreThan(Int)
         
         var value: String {
             switch self {
             case let .createdLessThan(days):
-                let date = Calendar.current.date(byAdding: .day, value: -days, to: Date())
-                return "created:>\(dateFormatter.string(from: date!))"
+                return "created:>\(dateFormatter.string(from: days.daysAgo))"
             case let .createdMoreThan(days):
-                let date = Calendar.current.date(byAdding: .day, value: -days, to: Date())
-                return "created:<\(dateFormatter.string(from: date!))"
+                return "created:<\(dateFormatter.string(from: days.daysAgo))"
+            case let .closedLessThan(days):
+                return "closed:>\(dateFormatter.string(from: days.daysAgo))"
+            case let .closedMoreThan(days):
+                return "closed:<\(dateFormatter.string(from: days.daysAgo))"
             }
         }
     }
@@ -293,4 +295,12 @@ extension GitHubSearchData.Response.Search.Node {
     private var _actions: [Output.Action] {
         return []
     }
+}
+
+private extension Int {
+
+    private var daysAgo: Date {
+        return Calendar.current.date(byAdding: .day, value: -self, to: Date())!
+    }
+
 }
