@@ -1,6 +1,10 @@
 # Wassup
 
-**Wassup** is a flexible and customizable dashboard for showing GitHub data. The dashboard is configured through a custom Swift DSL and refreshed every 5 minutes. Panes can also be set with different alert levels. If any content shows up in those panes, the number of items will show up in the menu bar icon to alert the user that something needs attention).
+**Wassup** is a flexible and customizable dashboard for showing GitHub data. 
+
+The dashboard is configured through a custom Swift DSL and refreshed every 5 minutes. 
+
+Panes can also be set with different alert levels. If any content shows up in those panes, the number of items will show up in the menu bar icon to alert the user that something needs attention).
 
 https://user-images.githubusercontent.com/401294/170400835-0762658c-04c9-4505-9def-e9fb2ad6531a.mov
 
