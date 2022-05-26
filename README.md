@@ -44,3 +44,28 @@ These are the (somewhat) required secrets you will need to set to avoid getting 
 GITHUB_USERNAME=your_username
 GITHUB_API_KEY=your_api_key
 ```
+
+## SwiftUI Series Information
+
+This macOS app doesn't do a lot of crazy stuff with SwiftUI. However...
+- [Status bar item](https://github.com/joshdholtz/wassup-swift/blob/main/Wassup/AppDelegate.swift#L15-L63) is a SwiftUI view
+- This would have been much more difficult to build without SwiftUI
+- The DSL for the dashboard configuration is **HIGHLY** inspired by SwiftUI
+  - I got some experience at how SwiftUI works by building a custom DSL
+  - The dashboard configuration is a fun, scriptable, and (hopefully) natural feeling to users because of its similarity to SwiftUI
+
+### How This Works
+There are two parts to this:
+1. A SwiftUI app
+2. A Swift script that runs the DSL
+
+These parts share both:
+1. The DSL
+2. A data structure that uses `Codable` objects that allow the SwiftUI and the Swift script to communicate
+
+1. DSL is written by user in SwiftUI app
+2. DSL is then built and run with `swift` CLI (shelled out using [ShellOut](https://github.com/JohnSundell/ShellOut))
+    - The script fetches all the data from the panes and generates a nice codable data structure
+    - The data structure is encoded to a JSON string a written to STDOUT for the SwiftUI app to read
+3. SwiftUI app waits for the JSON response from the `swift` CLI and then decodes using the same data structure
+4. This data structure is then rendered into the SwiftUI dashboard you see in the screenshot above
