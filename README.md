@@ -8,7 +8,7 @@ Panes can also be set with different alert levels. If any content shows up in th
 
 https://user-images.githubusercontent.com/401294/170400835-0762658c-04c9-4505-9def-e9fb2ad6531a.mov
 
-## Setup
+## 📄 Setup
 
 ### Dashboard Configuration
 
@@ -49,7 +49,7 @@ GITHUB_USERNAME=your_username
 GITHUB_API_KEY=your_api_key
 ```
 
-## SwiftUI Series Information
+## ✨ SwiftUI Series Information
 
 This macOS app doesn't do a lot of crazy stuff with SwiftUI. However... the thing I wanted to showcase was writing a custom SwiftUI like DSL and how to use it 🤷‍♂️
 
