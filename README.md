@@ -51,7 +51,8 @@ GITHUB_API_KEY=your_api_key
 
 ## SwiftUI Series Information
 
-This macOS app doesn't do a lot of crazy stuff with SwiftUI. However...
+This macOS app doesn't do a lot of crazy stuff with SwiftUI. However... the thing I wanted to showcase was writing a custom SwiftUI like DSL and how to use it 🤷‍♂️
+
 - [Status bar item](https://github.com/joshdholtz/wassup-swift/blob/main/Wassup/AppDelegate.swift#L15-L63) is a SwiftUI view
 - This would have been much more difficult to build without SwiftUI
 - The DSL for the dashboard configuration is **HIGHLY** inspired by SwiftUI
