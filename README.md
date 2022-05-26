@@ -55,17 +55,24 @@ This macOS app doesn't do a lot of crazy stuff with SwiftUI. However...
   - The dashboard configuration is a fun, scriptable, and (hopefully) natural feeling to users because of its similarity to SwiftUI
 
 ### How This Works
-There are two parts to this:
+
+#### There are two parts to this:
 1. A SwiftUI app
 2. A Swift script that runs the DSL
 
-These parts share both:
-1. The DSL
-2. A data structure that uses `Codable` objects that allow the SwiftUI and the Swift script to communicate
+#### These parts share both:
+1. The [DSL](https://github.com/joshdholtz/wassup-swift/blob/main/Wassup/Runner/DSL.swift)
+2. A [data structure](https://github.com/joshdholtz/wassup-swift/blob/main/Wassup/Runner/Output.swift) that uses `Codable` objects that allow the SwiftUI and the Swift script to communicate
 
+#### The steps: 
 1. DSL is written by user in SwiftUI app
-2. DSL is then built and run with `swift` CLI (shelled out using [ShellOut](https://github.com/JohnSundell/ShellOut))
+2. DSL is then [built and run](https://github.com/joshdholtz/wassup-swift/blob/main/Wassup/WassupExecutor.swift) with `swift` CLI (shelled out using [ShellOut](https://github.com/JohnSundell/ShellOut))
     - The script fetches all the data from the panes and generates a nice codable data structure
     - The data structure is encoded to a JSON string a written to STDOUT for the SwiftUI app to read
-3. SwiftUI app waits for the JSON response from the `swift` CLI and then decodes using the same data structure
-4. This data structure is then rendered into the SwiftUI dashboard you see in the screenshot above
+3. [SwiftUI app waits](https://github.com/joshdholtz/wassup-swift/blob/main/Wassup/ContentView.swift#L117-L143) for the JSON response from the `swift` CLI and then decodes using the same data structure
+4. This data structure is then [rendered into the SwiftUI dashboard](https://github.com/joshdholtz/wassup-swift/blob/main/Wassup/ContentView.swift#L145-L211) you see in the screenshot above
+
+#### Swift CLI Script
+The Swift CLI script is generated with the DSL, data structure, and runner in the Xcode build phase. This ensures that the SwiftUI app and Swift CLI script are always using the same versions in each build.
+<img width="924" alt="Screen Shot 2022-05-25 at 8 59 46 PM" src="https://user-images.githubusercontent.com/401294/170399909-71ad1366-4ff8-41e5-8907-da47fe6fd532.png">
+
