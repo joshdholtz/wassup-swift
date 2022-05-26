@@ -34,6 +34,7 @@
 		2C9FB69427F798D80087C56C /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9FB69327F798D80087C56C /* Helpers.swift */; };
 		2C9FB69627F799440087C56C /* ContentItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9FB69527F799440087C56C /* ContentItem.swift */; };
 		2C9FB69827F79A5D0087C56C /* Output.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C9FB69727F79A5D0087C56C /* Output.swift */; };
+		2CD581BF28138A0B0023960C /* GitHubRepos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CD581BE28138A0B0023960C /* GitHubRepos.swift */; };
 		4A6BA99926BB990502710879 /* Pods_WassupTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BFA54132EC9677EDE069D092 /* Pods_WassupTests.framework */; };
 		C551F1825CFF3E7D42B2179B /* Pods_Wassup_WassupUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D8B654EA1F6F53B619A1661 /* Pods_Wassup_WassupUITests.framework */; };
 /* End PBXBuildFile section */
@@ -83,6 +84,7 @@
 		2C9FB69327F798D80087C56C /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		2C9FB69527F799440087C56C /* ContentItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentItem.swift; sourceTree = "<group>"; };
 		2C9FB69727F79A5D0087C56C /* Output.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Output.swift; sourceTree = "<group>"; };
+		2CD581BE28138A0B0023960C /* GitHubRepos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubRepos.swift; sourceTree = "<group>"; };
 		5D8B654EA1F6F53B619A1661 /* Pods_Wassup_WassupUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wassup_WassupUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A297A28039FEDABC84C955A0 /* Pods_Wassup.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Wassup.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFA54132EC9677EDE069D092 /* Pods_WassupTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WassupTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -188,6 +190,7 @@
 				2C9FB69727F79A5D0087C56C /* Output.swift */,
 				2C9FB69327F798D80087C56C /* Helpers.swift */,
 				2C1029B127E4D5AE0065D145 /* GitHubSearch.swift */,
+				2CD581BE28138A0B0023960C /* GitHubRepos.swift */,
 				2C1029BC27EC1B070065D145 /* RunnerPart.txt */,
 				2C1029B727E4EFA40065D145 /* RunnerTemplate.txt */,
 			);
@@ -387,6 +390,7 @@
 				"$(SRCROOT)/Wassup/Runner/Helpers.swift",
 				"$(SRCROOT)/Wassup/Runner/ContentItem.swift",
 				"$(SRCROOT)/Wassup/Runner/Output.swift",
+				"$(SRCROOT)/Wassup/Runner/GitHubRepos.swift",
 			);
 			name = "Generate Runner";
 			outputFileListPaths = (
@@ -446,6 +450,7 @@
 			files = (
 				2C1029AE27E4D0A30065D145 /* WassupRunner.swift in Sources */,
 				2C9FB69427F798D80087C56C /* Helpers.swift in Sources */,
+				2CD581BF28138A0B0023960C /* GitHubRepos.swift in Sources */,
 				2C10297A27E2C95C0065D145 /* ViewController.swift in Sources */,
 				2C1029B227E4D5AF0065D145 /* GitHubSearch.swift in Sources */,
 				2C1029B627E4DDB20065D145 /* WassupExecutor.swift in Sources */,

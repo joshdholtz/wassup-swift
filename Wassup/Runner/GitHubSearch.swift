@@ -7,108 +7,116 @@
 
 import Foundation
 
-struct GitHubSearch: ContentBuilder {
-    enum Qualifer {
-        var dateFormatter: DateFormatter {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            return dateFormatter
-        }
-        
-        case createdLessThan(Int), createdMoreThan(Int), closedLessThan(Int), closedMoreThan(Int)
-        
-        var value: String {
-            switch self {
-            case let .createdLessThan(days):
-                return "created:>\(dateFormatter.string(from: days.daysAgo))"
-            case let .createdMoreThan(days):
-                return "created:<\(dateFormatter.string(from: days.daysAgo))"
-            case let .closedLessThan(days):
-                return "closed:>\(dateFormatter.string(from: days.daysAgo))"
-            case let .closedMoreThan(days):
-                return "closed:<\(dateFormatter.string(from: days.daysAgo))"
-            }
-        }
-    }
+struct GitHub {
     
-    var q: String
-    var showExtras: Bool
-    var qualifiers: [Qualifer]
-    
-    var actions: [(String?, String?, GitHubSearchAction)]? = nil
-    
-    var defaultActions: [(String?, String?, GitHubSearchAction)] =  [(nil, "square.and.arrow.up", { .url($0.url) })]
-    
-    init(_ q: String, _ qualifiers: [Qualifer] = [], showExtras: Bool = false, _ actions: [(String?, String?, GitHubSearchAction)]? = nil) {
-        self.q = q
-        self.qualifiers = qualifiers
-        self.showExtras = showExtras
-        self.actions = actions ?? defaultActions
-    }
-    
-    func toItems() -> [ContentItem] {
-        do {
-            let newQ = ([q] + qualifiers.map({$0.value})).joined(separator: " ")
-            
-            let githubUsername = ProcessInfo.processInfo.environment["GITHUB_USERNAME"]!.trimmingCharacters(in: .whitespacesAndNewlines)
-            let githubApiKey = ProcessInfo.processInfo.environment["GITHUB_API_KEY"]!.trimmingCharacters(in: .whitespacesAndNewlines)
-            
-            let url = "https://api.github.com/graphql"
-            let query = GitHubSearchData.makeSearchQuery(q: newQ)
-            
-            let body = try! JSONEncoder().encode([
-                "query": query
-            ])
-            
-//            print("JSON BODY")
-//            print(String(data: body, encoding: .utf8))
-            
-            let (data, _) = try httpRequest(url: url, method: "POST", body: body, auth: .basic(githubUsername, githubApiKey))
-            
-//            print("DATA")
-//            print(String(data: data!, encoding: .utf8))
-            
-            let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
-            decoder.dateDecodingStrategy = .iso8601
+}
 
-            let decodedResponse = try decoder.decode(GitHubSearchData.Response.self, from: data!)
-            return decodedResponse.data.search.nodes.map { item in
-                let contentItem = item.asItem
-                
-                let actions = self.actions ?? []
-                
-                return ContentItem(
-                    title: contentItem.title,
-                    subtitle: contentItem.subtitle,
-                    extras: showExtras ? contentItem.extras : [],
-//                    contentItem: item,
-                    actions: actions.map({ (key: String?, image: String?, value: GitHubSearchAction) in
-                        let theValue = value(item)
-                        return Output.Action(name: key, image: image, value: theValue)
-                    })
-                )
+typealias GitHubSearch = GitHub.Search
+
+extension GitHub {
+    struct Search: ContentBuilder {
+        enum Qualifer {
+            var dateFormatter: DateFormatter {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                return dateFormatter
             }
-        } catch {
-            // TODO: Handle this error
-            print("Error in GitHub Search: \(error)")
+            
+            case createdLessThan(Int), createdMoreThan(Int), closedLessThan(Int), closedMoreThan(Int)
+            
+            var value: String {
+                switch self {
+                case let .createdLessThan(days):
+                    return "created:>\(dateFormatter.string(from: days.daysAgo))"
+                case let .createdMoreThan(days):
+                    return "created:<\(dateFormatter.string(from: days.daysAgo))"
+                case let .closedLessThan(days):
+                    return "closed:>\(dateFormatter.string(from: days.daysAgo))"
+                case let .closedMoreThan(days):
+                    return "closed:<\(dateFormatter.string(from: days.daysAgo))"
+                }
+            }
         }
         
-        return []
+        var q: String
+        var showExtras: Bool
+        var qualifiers: [Qualifer]
+        
+        var actions: [(String?, String?, GitHubSearchAction)]? = nil
+        
+        var defaultActions: [(String?, String?, GitHubSearchAction)] =  [(nil, "square.and.arrow.up", { .url($0.url) })]
+        
+        init(_ q: String, _ qualifiers: [Qualifer] = [], showExtras: Bool = false, _ actions: [(String?, String?, GitHubSearchAction)]? = nil) {
+            self.q = q
+            self.qualifiers = qualifiers
+            self.showExtras = showExtras
+            self.actions = actions ?? defaultActions
+        }
+        
+        func toItems() -> [ContentItem] {
+            do {
+                let newQ = ([q] + qualifiers.map({$0.value})).joined(separator: " ")
+                
+                let githubUsername = ProcessInfo.processInfo.environment["GITHUB_USERNAME"]!.trimmingCharacters(in: .whitespacesAndNewlines)
+                let githubApiKey = ProcessInfo.processInfo.environment["GITHUB_API_KEY"]!.trimmingCharacters(in: .whitespacesAndNewlines)
+                
+                let url = "https://api.github.com/graphql"
+                let query = GitHubSearchData.makeSearchQuery(q: newQ)
+                
+                let body = try! JSONEncoder().encode([
+                    "query": query
+                ])
+                
+    //            print("JSON BODY")
+    //            print(String(data: body, encoding: .utf8))
+                
+                let (data, _) = try httpRequest(url: url, method: "POST", body: body, auth: .basic(githubUsername, githubApiKey))
+                
+    //            print("DATA")
+    //            print(String(data: data!, encoding: .utf8))
+                
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                decoder.dateDecodingStrategy = .iso8601
+
+                let decodedResponse = try decoder.decode(GitHubSearchData.Response.self, from: data!)
+                return decodedResponse.data.search.nodes.map { item in
+                    let contentItem = item.asItem
+                    
+                    let actions = self.actions ?? []
+                    
+                    return ContentItem(
+                        title: contentItem.title,
+                        subtitle: contentItem.subtitle,
+                        extras: showExtras ? contentItem.extras : [],
+    //                    contentItem: item,
+                        actions: actions.map({ (key: String?, image: String?, value: GitHubSearchAction) in
+                            let theValue = value(item)
+                            return Output.Action(name: key, image: image, value: theValue)
+                        })
+                    )
+                }
+            } catch {
+                // TODO: Handle this error
+                print("Error in GitHub Search: \(error)")
+            }
+            
+            return []
+        }
     }
 }
 
 typealias GitHubSearchAction = (GitHubSearchData.Response.Search.Node) -> (ActionValue)
-extension GitHubSearch {
+extension GitHub.Search {
     func action(label name: String? = nil, image: String? = nil, clearPrevious: Bool = false, action: @escaping GitHubSearchAction) -> Self {
         let actions = (clearPrevious ? [] : self.actions ?? []) + [(name, image, action)]
         
-        return GitHubSearch(self.q, self.qualifiers, showExtras: self.showExtras, actions)
+        return GitHub.Search(self.q, self.qualifiers, showExtras: self.showExtras, actions)
     }
 }
 
 extension ContentArrayBuilder {
-    static func buildExpression(_ expression: GitHubSearch) -> [ContentItem] {
+    static func buildExpression(_ expression: GitHub.Search) -> [ContentItem] {
         return expression.toItems()
     }
 }
